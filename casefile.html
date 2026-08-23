@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PPP Intelligence — Document Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E1420;
+    --panel:#141B29;
+    --panel-alt:#1A2333;
+    --border:#28324A;
+    --border-soft:#212B3F;
+    --ink-hi:#EDEFF4;
+    --ink-lo:#8B93A7;
+    --ink-faint:#5B6478;
+    --accent:#E0A458;
+    --accent-dim:#3A3223;
+    --accent-2:#4FB0A5;
+    --danger:#E38178;
+    --danger-dim:#3A2323;
+    --radius:10px;
+    --font-display:'Space Grotesk',sans-serif;
+    --font-body:'IBM Plex Sans',sans-serif;
+    --font-mono:'IBM Plex Mono',monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink-hi);
+    font-family:var(--font-body);
+    font-size:14px;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--accent-dim);color:var(--accent);}
+  button{font-family:inherit;}
+  input,button{outline:none;}
+
+  .app{display:flex;flex-direction:column;height:100vh;}
+
+  /* ---------- Top bar ---------- */
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 20px;height:56px;flex:0 0 56px;
+    border-bottom:1px solid var(--border);
+    background:linear-gradient(180deg,#121826,#0F1521);
+  }
+  .brand{
+    font-family:var(--font-display);font-weight:700;font-size:16px;
+    letter-spacing:0.02em;display:flex;align-items:baseline;gap:10px;
+  }
+  .brand .mark{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:22px;height:22px;border-radius:5px;
+    background:var(--accent);color:#1A1204;font-family:var(--font-mono);
+    font-size:12px;font-weight:700;transform:rotate(-3deg);
+  }
+  .brand .tag{
+    font-family:var(--font-mono);font-weight:400;font-size:11px;
+    color:var(--ink-faint);letter-spacing:0.04em;text-transform:uppercase;
+  }
+  .conn{display:flex;align-items:center;gap:10px;}
+  .conn label{font-size:11px;color:var(--ink-faint);font-family:var(--font-mono);}
+  #baseUrl{
+    background:var(--panel-alt);border:1px solid var(--border);color:var(--ink-lo);
+    font-family:var(--font-mono);font-size:12px;padding:6px 9px;border-radius:6px;
+    width:220px;transition:border-color .15s;
+  }
+  #baseUrl:focus{border-color:var(--accent);color:var(--ink-hi);}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--ink-faint);flex:0 0 auto;transition:background .2s;}
+  .dot.ok{background:var(--accent-2);box-shadow:0 0 8px rgba(79,176,165,.6);}
+  .dot.bad{background:var(--danger);box-shadow:0 0 8px rgba(227,129,120,.6);}
+
+  /* ---------- Layout ---------- */
+  .body{flex:1;display:flex;min-height:0;}
+  .sidebar{
+    flex:0 0 280px;border-right:1px solid var(--border);
+    background:var(--panel);display:flex;flex-direction:column;
+    min-height:0;
+  }
+  .sidebar section{padding:16px;}
+  .sidebar h2{
+    font-family:var(--font-mono);font-size:11px;text-transform:uppercase;
+    letter-spacing:0.08em;color:var(--ink-faint);margin:0 0 12px;font-weight:500;
+  }
+  .projects{border-bottom:1px solid var(--border-soft);}
+
+  #newProjectForm{display:flex;gap:6px;margin-bottom:12px;}
+  #newProjectName{
+    flex:1;background:var(--panel-alt);border:1px solid var(--border);color:var(--ink-hi);
+    border-radius:6px;padding:7px 9px;font-size:13px;
+  }
+  #newProjectName:focus{border-color:var(--accent);}
+  #newProjectName::placeholder{color:var(--ink-faint);}
+  .btn{
+    background:var(--accent);color:#1A1204;border:none;border-radius:6px;
+    padding:7px 12px;font-size:13px;font-weight:600;cursor:pointer;
+    transition:transform .1s, filter .15s;
+  }
+  .btn:hover{filter:brightness(1.08);}
+  .btn:active{transform:scale(.97);}
+  .btn:disabled{opacity:.5;cursor:not-allowed;}
+  .btn.ghost{background:transparent;border:1px solid var(--border);color:var(--ink-lo);}
+  .btn.ghost:hover{border-color:var(--accent);color:var(--accent);filter:none;}
+
+  #projectList{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:3px;}
+  .project-item{
+    display:flex;flex-direction:column;gap:2px;padding:9px 10px;border-radius:7px;
+    cursor:pointer;border:1px solid transparent;
+  }
+  .project-item:hover{background:var(--panel-alt);}
+  .project-item.active{background:var(--accent-dim);border-color:#4A3B21;}
+  .project-item .pname{font-size:13px;font-weight:500;color:var(--ink-hi);}
+  .project-item.active .pname{color:var(--accent);}
+  .project-item .pid{font-family:var(--font-mono);font-size:10px;color:var(--ink-faint);}
+  .sidebar-empty{font-size:12px;color:var(--ink-faint);padding:4px 2px;line-height:1.5;}
+
+  .documents{flex:1;overflow-y:auto;}
+  .dropzone{
+    border:1.5px dashed var(--border);border-radius:8px;padding:16px 10px;
+    text-align:center;font-size:12px;color:var(--ink-faint);cursor:pointer;
+    transition:border-color .15s,color .15s,background .15s;margin-bottom:12px;
+  }
+  .dropzone:hover,.dropzone.drag{border-color:var(--accent);color:var(--accent);background:rgba(224,164,88,.05);}
+  .dropzone small{display:block;margin-top:4px;font-family:var(--font-mono);letter-spacing:.05em;}
+  #docList{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;}
+  .doc-item{
+    background:var(--panel-alt);border:1px solid var(--border-soft);border-radius:7px;
+    padding:9px 10px;
+  }
+  .doc-name{font-size:12.5px;color:var(--ink-hi);word-break:break-all;margin-bottom:4px;}
+  .doc-meta{display:flex;align-items:center;justify-content:space-between;gap:6px;}
+  .doc-status{
+    font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.05em;
+    padding:2px 6px;border-radius:4px;
+  }
+  .doc-status.ready{color:var(--accent-2);background:rgba(79,176,165,.12);}
+  .doc-status.pending{color:var(--accent);background:var(--accent-dim);}
+  .doc-status.error{color:var(--danger);background:var(--danger-dim);}
+  .doc-chunks{font-family:var(--font-mono);font-size:10px;color:var(--ink-faint);}
+
+  /* ---------- Main workbench ---------- */
+  .workbench{flex:1;display:flex;flex-direction:column;min-height:0;position:relative;}
+  .empty{
+    display:flex;align-items:center;justify-content:center;
+    color:var(--ink-faint);font-size:13.5px;text-align:center;padding:40px;
+  }
+  .empty .empty-inner{max-width:340px;}
+  .empty .empty-mark{font-family:var(--font-mono);font-size:11px;color:var(--ink-faint);
+    letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;display:block;}
+
+  .banner{
+    margin:14px 20px 0;padding:10px 12px;border-radius:7px;font-size:12.5px;
+    background:var(--danger-dim);border:1px solid #4A2A26;color:var(--danger);
+    display:flex;justify-content:space-between;gap:10px;align-items:flex-start;
+  }
+  .banner button{background:none;border:none;color:var(--danger);cursor:pointer;font-size:14px;line-height:1;}
+
+  .thread{flex:1;overflow-y:auto;padding:22px 0 12px;}
+  .thread-inner{max-width:760px;margin:0 auto;padding:0 24px;display:flex;flex-direction:column;gap:22px;}
+
+  .msg-q{display:flex;gap:12px;align-items:flex-start;}
+  .msg-q .role{
+    font-family:var(--font-mono);font-size:10px;color:var(--ink-faint);
+    padding-top:3px;flex:0 0 46px;text-transform:uppercase;letter-spacing:.06em;
+  }
+  .msg-q .content{font-size:14.5px;color:var(--ink-hi);font-weight:500;line-height:1.5;}
+
+  .msg-a{display:flex;gap:12px;align-items:flex-start;}
+  .msg-a .role{
+    font-family:var(--font-mono);font-size:10px;color:var(--accent);
+    padding-top:4px;flex:0 0 46px;text-transform:uppercase;letter-spacing:.06em;
+  }
+  .msg-a .content{flex:1;min-width:0;}
+  .answer-text{font-size:14px;line-height:1.7;color:var(--ink-hi);}
+  .answer-text p{margin:0 0 10px;}
+  .answer-text ul{margin:0 0 10px;padding-left:18px;}
+  .answer-text li{margin-bottom:6px;}
+  .answer-text strong{color:var(--ink-hi);font-weight:600;}
+  .answer-text .subhead{font-weight:600;color:var(--ink-hi);}
+
+  .cite{
+    display:inline-flex;align-items:center;justify-content:center;
+    font-family:var(--font-mono);font-size:10px;font-weight:500;
+    background:var(--accent-dim);color:var(--accent);border:1px solid #4A3B21;
+    border-radius:4px 4px 4px 1px;padding:0 5px;height:16px;line-height:16px;
+    margin:0 2px;cursor:pointer;position:relative;top:-1px;
+    transition:background .15s,color .15s;
+  }
+  .cite:hover{background:var(--accent);color:#1A1204;}
+
+  .evidence{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;}
+  .evidence-card{
+    background:var(--panel-alt);border:1px solid var(--border-soft);border-radius:7px;
+    padding:8px 10px;width:168px;transition:border-color .3s,background .3s;
+  }
+  .evidence-card.flash{border-color:var(--accent);background:var(--accent-dim);}
+  .evidence-card .ecard-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;}
+  .evidence-card .etag{
+    font-family:var(--font-mono);font-size:10px;color:var(--accent);font-weight:600;
+  }
+  .evidence-card .epage{font-family:var(--font-mono);font-size:10px;color:var(--ink-faint);}
+  .evidence-card .efile{font-size:11px;color:var(--ink-lo);word-break:break-all;line-height:1.4;}
+
+  .thinking{display:flex;gap:12px;align-items:center;}
+  .thinking .role{flex:0 0 46px;}
+  .thinking-dots{display:flex;gap:4px;}
+  .thinking-dots span{
+    width:5px;height:5px;border-radius:50%;background:var(--ink-faint);
+    animation:pulse 1.1s infinite ease-in-out;
+  }
+  .thinking-dots span:nth-child(2){animation-delay:.15s;}
+  .thinking-dots span:nth-child(3){animation-delay:.3s;}
+  @keyframes pulse{0%,80%,100%{opacity:.25;transform:scale(.8);}40%{opacity:1;transform:scale(1);}}
+
+  .askbar{
+    flex:0 0 auto;border-top:1px solid var(--border);background:var(--panel);
+    padding:14px 24px;
+  }
+  .askbar-inner{max-width:760px;margin:0 auto;display:flex;gap:10px;}
+  #questionInput{
+    flex:1;background:var(--panel-alt);border:1px solid var(--border);color:var(--ink-hi);
+    border-radius:8px;padding:11px 13px;font-size:13.5px;
+  }
+  #questionInput::placeholder{color:var(--ink-faint);}
+  #questionInput:focus{border-color:var(--accent);}
+  #askForm .btn{padding:0 18px;}
+
+  ::-webkit-scrollbar{width:10px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+  ::-webkit-scrollbar-thumb{background:#232D42;border-radius:5px;}
+  ::-webkit-scrollbar-thumb:hover{background:#2C3855;}
+
+  @media (max-width:760px){
+    .sidebar{flex:0 0 220px;}
+    .thread-inner,.askbar-inner{padding:0 14px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><span class="mark">C</span>PPP Intelligence <span class="tag">document intelligence</span></div>
+    <div class="conn">
+      <label for="baseUrl">API</label>
+      <input id="baseUrl" spellcheck="false" value="http://127.0.0.1:8000">
+      <span class="dot" id="connDot" title="connection status"></span>
+    </div>
+  </header>
+
+  <div class="body">
+    <aside class="sidebar">
+      <section class="projects">
+        <h2>Projects</h2>
+        <form id="newProjectForm">
+          <input id="newProjectName" placeholder="New project name…" autocomplete="off">
+          <button class="btn" type="submit">Add</button>
+        </form>
+        <ul id="projectList"></ul>
+        <div class="sidebar-empty" id="projectsEmpty">No projects yet — add one above.</div>
+      </section>
+
+      <section class="documents" id="docSection" hidden>
+        <h2>Documents</h2>
+        <div class="dropzone" id="dropzone">
+          Drop a file, or click to upload
+          <small>PDF · DOCX · XLSX</small>
+        </div>
+        <input type="file" id="fileInput" accept=".pdf,.docx,.xlsx" hidden>
+        <ul id="docList"></ul>
+      </section>
+    </aside>
+
+    <main class="workbench" id="workbench">
+      <div id="bannerHost"></div>
+
+      <div class="empty" id="emptyState">
+        <div class="empty-inner">
+          <span class="empty-mark">PPP Intelligence</span>
+          Select or create a project on the left, upload a document, then ask a question grounded in its contents.
+        </div>
+      </div>
+
+      <div class="thread" id="thread" hidden>
+        <div class="thread-inner" id="threadInner"></div>
+      </div>
+
+      <div class="askbar" id="askForm" hidden>
+        <form class="askbar-inner" id="askFormInner">
+          <input id="questionInput" placeholder="Ask a question about this project's documents…" autocomplete="off">
+          <button class="btn" type="submit" id="askBtn">Ask</button>
+        </form>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+(() => {
+  const state = {
+    projects: [],       // {id, name, documents: [], messages: []}
+    currentId: null,
+  };
+
+  const el = {
+    baseUrl: document.getElementById('baseUrl'),
+    connDot: document.getElementById('connDot'),
+    newProjectForm: document.getElementById('newProjectForm'),
+    newProjectName: document.getElementById('newProjectName'),
+    projectList: document.getElementById('projectList'),
+    projectsEmpty: document.getElementById('projectsEmpty'),
+    docSection: document.getElementById('docSection'),
+    dropzone: document.getElementById('dropzone'),
+    fileInput: document.getElementById('fileInput'),
+    docList: document.getElementById('docList'),
+    emptyState: document.getElementById('emptyState'),
+    thread: document.getElementById('thread'),
+    threadInner: document.getElementById('threadInner'),
+    askForm: document.getElementById('askForm'),
+    askFormInner: document.getElementById('askFormInner'),
+    questionInput: document.getElementById('questionInput'),
+    askBtn: document.getElementById('askBtn'),
+    bannerHost: document.getElementById('bannerHost'),
+  };
+
+  function baseUrl() {
+    return el.baseUrl.value.trim().replace(/\/+$/, '');
+  }
+
+  function currentProject() {
+    return state.projects.find(p => p.id === state.currentId) || null;
+  }
+
+  function showBanner(message) {
+    el.bannerHost.innerHTML = '';
+    const div = document.createElement('div');
+    div.className = 'banner';
+    div.innerHTML = `<span></span><button aria-label="dismiss">×</button>`;
+    div.querySelector('span').textContent = message;
+    div.querySelector('button').onclick = () => div.remove();
+    el.bannerHost.appendChild(div);
+  }
+
+  async function api(path, opts = {}) {
+    let res;
+    try {
+      res = await fetch(baseUrl() + path, opts);
+    } catch (err) {
+      el.connDot.className = 'dot bad';
+      throw new Error(
+        `Could not reach ${baseUrl()}. Is the server running, and does it allow CORS from this page?`
+      );
+    }
+    el.connDot.className = 'dot ok';
+    if (!res.ok) {
+      let detail = res.statusText;
+      try {
+        const body = await res.json();
+        detail = body.detail || detail;
+      } catch (_) {}
+      throw new Error(`${res.status}: ${detail}`);
+    }
+    return res.json();
+  }
+
+  // ---------- Projects ----------
+
+  el.newProjectForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = el.newProjectName.value.trim();
+    if (!name) return;
+    const btn = el.newProjectForm.querySelector('button');
+    btn.disabled = true;
+    try {
+      const project = await api('/projects', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name }),
+      });
+      state.projects.push({ id: project.id, name: project.name, documents: [], messages: [] });
+      el.newProjectName.value = '';
+      selectProject(project.id);
+    } catch (err) {
+      showBanner(err.message);
+    } finally {
+      btn.disabled = false;
+    }
+  });
+
+  function renderProjects() {
+    el.projectList.innerHTML = '';
+    el.projectsEmpty.hidden = state.projects.length > 0;
+    for (const p of state.projects) {
+      const li = document.createElement('li');
+      li.className = 'project-item' + (p.id === state.currentId ? ' active' : '');
+      li.innerHTML = `<span class="pname"></span><span class="pid"></span>`;
+      li.querySelector('.pname').textContent = p.name;
+      li.querySelector('.pid').textContent = p.id;
+      li.onclick = () => selectProject(p.id);
+      el.projectList.appendChild(li);
+    }
+  }
+
+  function selectProject(id) {
+    state.currentId = id;
+    renderProjects();
+    el.docSection.hidden = false;
+    el.emptyState.hidden = true;
+    el.thread.hidden = false;
+    el.askForm.hidden = false;
+    renderDocuments();
+    renderThread();
+    el.questionInput.focus();
+  }
+
+  // ---------- Documents ----------
+
+  el.dropzone.addEventListener('click', () => el.fileInput.click());
+  el.fileInput.addEventListener('change', () => {
+    if (el.fileInput.files[0]) uploadDocument(el.fileInput.files[0]);
+    el.fileInput.value = '';
+  });
+  ['dragenter', 'dragover'].forEach(evt =>
+    el.dropzone.addEventListener(evt, (e) => { e.preventDefault(); el.dropzone.classList.add('drag'); })
+  );
+  ['dragleave', 'drop'].forEach(evt =>
+    el.dropzone.addEventListener(evt, (e) => { e.preventDefault(); el.dropzone.classList.remove('drag'); })
+  );
+  el.dropzone.addEventListener('drop', (e) => {
+    const file = e.dataTransfer.files[0];
+    if (file) uploadDocument(file);
+  });
+
+  async function uploadDocument(file) {
+    const project = currentProject();
+    if (!project) return;
+    const ext = '.' + file.name.split('.').pop().toLowerCase();
+    if (!['.pdf', '.docx', '.xlsx'].includes(ext)) {
+      showBanner('Supported formats: PDF, DOCX, XLSX');
+      return;
+    }
+    const placeholder = { id: 'pending-' + Date.now(), filename: file.name, chunks: null, status: 'pending' };
+    project.documents.push(placeholder);
+    renderDocuments();
+
+    const form = new FormData();
+    form.append('file', file);
+    try {
+      const doc = await api(`/projects/${project.id}/documents`, { method: 'POST', body: form });
+      Object.assign(placeholder, {
+        id: doc.document_id, filename: doc.filename, chunks: doc.chunks, status: doc.status,
+      });
+    } catch (err) {
+      placeholder.status = 'error';
+      showBanner(err.message);
+    }
+    renderDocuments();
+  }
+
+  function renderDocuments() {
+    const project = currentProject();
+    el.docList.innerHTML = '';
+    if (!project) return;
+    for (const d of project.documents) {
+      const li = document.createElement('li');
+      li.className = 'doc-item';
+      const statusLabel = d.status === 'pending' ? 'ingesting…' : d.status;
+      li.innerHTML = `
+        <div class="doc-name"></div>
+        <div class="doc-meta">
+          <span class="doc-status ${d.status}"></span>
+          <span class="doc-chunks"></span>
+        </div>`;
+      li.querySelector('.doc-name').textContent = d.filename;
+      li.querySelector('.doc-status').textContent = statusLabel;
+      li.querySelector('.doc-chunks').textContent = d.chunks != null ? `${d.chunks} chunks` : '';
+      el.docList.appendChild(li);
+    }
+  }
+
+  // ---------- Ask ----------
+
+  el.askFormInner.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const project = currentProject();
+    const question = el.questionInput.value.trim();
+    if (!project || !question) return;
+
+    project.messages.push({ role: 'q', text: question });
+    el.questionInput.value = '';
+    el.askBtn.disabled = true;
+    renderThread(true);
+
+    try {
+      const result = await api(`/projects/${project.id}/ask`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question }),
+      });
+      project.messages.push({ role: 'a', answer: result.answer, citations: result.citations || [] });
+    } catch (err) {
+      project.messages.push({ role: 'a', answer: null, error: err.message });
+    }
+    el.askBtn.disabled = false;
+    renderThread();
+  });
+
+  function renderThread(thinking = false) {
+    const project = currentProject();
+    el.threadInner.innerHTML = '';
+    if (!project) return;
+
+    for (const m of project.messages) {
+      if (m.role === 'q') {
+        const div = document.createElement('div');
+        div.className = 'msg-q';
+        div.innerHTML = `<span class="role">you</span><span class="content"></span>`;
+        div.querySelector('.content').textContent = m.text;
+        el.threadInner.appendChild(div);
+      } else {
+        const div = document.createElement('div');
+        div.className = 'msg-a';
+        if (m.error) {
+          div.innerHTML = `<span class="role">PPP Intelligence</span>
+            <div class="content"><div class="banner" style="margin:0;"><span></span></div></div>`;
+          div.querySelector('.banner span').textContent = m.error;
+        } else {
+          const contentDiv = document.createElement('div');
+          contentDiv.className = 'content';
+          contentDiv.appendChild(renderAnswer(m.answer, m.citations));
+          div.innerHTML = `<span class="role">PPP Intelligence</span>`;
+          div.appendChild(contentDiv);
+        }
+        el.threadInner.appendChild(div);
+      }
+    }
+
+    if (thinking) {
+      const div = document.createElement('div');
+      div.className = 'thinking';
+      div.innerHTML = `<span class="role">PPP Intelligence</span>
+        <span class="thinking-dots"><span></span><span></span><span></span></span>`;
+      el.threadInner.appendChild(div);
+    }
+
+    el.thread.scrollTop = el.thread.scrollHeight;
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function renderAnswer(rawText, citations) {
+    const wrap = document.createElement('div');
+
+    // Strip a trailing "**Sources** [E1], [E2]..." block — the evidence cards below cover it.
+    let text = rawText.replace(/\n{1,2}\*\*Sources\*\*[\s\S]*$/i, '').trim();
+
+    const citeMap = {};
+    for (const c of citations || []) citeMap[c.evidence_id] = c;
+
+    const answerDiv = document.createElement('div');
+    answerDiv.className = 'answer-text';
+
+    const lines = text.split('\n').map(l => l.trim()).filter(l => l.length);
+    let listBuf = [];
+    const flushList = () => {
+      if (!listBuf.length) return;
+      const ul = document.createElement('ul');
+      for (const item of listBuf) ul.appendChild(inlineToNode('li', item));
+      answerDiv.appendChild(ul);
+      listBuf = [];
+    };
+
+    for (const line of lines) {
+      if (/^-\s+/.test(line)) {
+        listBuf.push(line.replace(/^-\s+/, ''));
+      } else {
+        flushList();
+        const isHeading = /^\*\*[^*]+\*\*:?$/.test(line);
+        const node = inlineToNode(isHeading ? 'p' : 'p', line);
+        if (isHeading) node.classList.add('subhead');
+        answerDiv.appendChild(node);
+      }
+    }
+    flushList();
+    wrap.appendChild(answerDiv);
+
+    // Evidence strip
+    if (citations && citations.length) {
+      const evidence = document.createElement('div');
+      evidence.className = 'evidence';
+      for (const c of citations) {
+        const card = document.createElement('div');
+        card.className = 'evidence-card';
+        card.id = 'evi-' + Math.random().toString(36).slice(2) + '-' + c.evidence_id;
+        card.dataset.eid = c.evidence_id;
+        card.innerHTML = `
+          <div class="ecard-top">
+            <span class="etag"></span>
+            <span class="epage"></span>
+          </div>
+          <div class="efile"></div>`;
+        card.querySelector('.etag').textContent = c.evidence_id;
+        card.querySelector('.epage').textContent = c.page != null ? `p.${c.page}` : '';
+        card.querySelector('.efile').textContent = c.filename;
+        evidence.appendChild(card);
+      }
+      wrap.appendChild(evidence);
+
+      // wire up inline citation chips to flash the matching card
+      wrap.querySelectorAll('.cite').forEach(chip => {
+        chip.addEventListener('click', () => {
+          const target = [...evidence.children].find(c => c.dataset.eid === chip.dataset.eid);
+          if (!target) return;
+          target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          target.classList.add('flash');
+          setTimeout(() => target.classList.remove('flash'), 900);
+        });
+      });
+    }
+
+    return wrap;
+  }
+
+  function inlineToNode(tag, line) {
+    const node = document.createElement(tag);
+    let html = escapeHtml(line);
+    html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    html = html.replace(/【\s*(E\d+)\s*】/g, (_, id) => `<span class="cite" data-eid="${id}">${id}</span>`);
+    node.innerHTML = html;
+    return node;
+  }
+
+})();
+</script>
+</body>
+</html>
