@@ -36,6 +36,12 @@ OPENROUTER_MODEL=your_model
 Start:
 
 ```bash
+python run.py
+```
+
+Or:
+
+```bash
 uvicorn app.main:app --reload
 ```
 

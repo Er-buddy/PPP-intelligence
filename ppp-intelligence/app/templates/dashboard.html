@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PPP Intelligence - Bid Decision Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 24px 32px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        input[type="text"] {
+            padding: 10px 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            width: 300px;
+            background: white;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #4A90D9;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #357ABD;
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .upload-section {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 24px;
+        }
+
+        .upload-section h3 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: #333;
+        }
+
+        .upload-form {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .upload-form input[type="file"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .upload-status {
+            font-size: 13px;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        .upload-status.success {
+            color: #27AE60;
+        }
+
+        .upload-status.error {
+            color: #E74C3C;
+        }
+
+        /* Score Dashboard */
+        .score-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .score-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            text-align: center;
+            border-left: 4px solid #ddd;
+        }
+
+        .score-card.positive { border-left-color: #27AE60; }
+        .score-card.negative { border-left-color: #E74C3C; }
+        .score-card.neutral { border-left-color: #F39C12; }
+        .score-card.insufficient { border-left-color: #95A5A6; }
+        .score-card.recommendation { border-left-color: #9B59B6; }
+
+        .score-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .score-card.positive .score-value { color: #27AE60; }
+        .score-card.negative .score-value { color: #E74C3C; }
+        .score-card.neutral .score-value { color: #F39C12; }
+        .score-card.insufficient .score-value { color: #95A5A6; }
+
+        .score-label {
+            font-size: 13px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .recommendation-text {
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .recommendation-text.green { color: #27AE60; }
+        .recommendation-text.red { color: #E74C3C; }
+        .recommendation-text.yellow { color: #F39C12; }
+
+        /* Main Layout */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 968px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 16px 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+            font-weight: 600;
+            font-size: 14px;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .questions-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .question-item {
+            padding: 16px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .question-item:hover {
+            background: #f8f9fa;
+        }
+
+        .question-item.active {
+            background: #e3f2fd;
+            border-left: 3px solid #4A90D9;
+        }
+
+        .question-number {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .question-item.active .question-number {
+            background: #4A90D9;
+            color: white;
+        }
+
+        .question-text {
+            flex: 1;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .question-category {
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .sentiment-badge {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .sentiment-positive { background: #d4edda; color: #155724; }
+        .sentiment-negative { background: #f8d7da; color: #721c24; }
+        .sentiment-neutral { background: #fff3cd; color: #856404; }
+        .sentiment-insufficient { background: #e2e3e5; color: #383d41; }
+
+        .answer-panel {
+            padding: 24px;
+            min-height: 400px;
+        }
+
+        .answer-placeholder {
+            color: #999;
+            text-align: center;
+            padding: 60px 20px;
+            font-size: 14px;
+        }
+
+        .answer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .answer-category {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #f0f0f0;
+            border-radius: 16px;
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .answer-question {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .answer-text {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #444;
+            margin-bottom: 20px;
+        }
+        .answer-text h1{font-size:22px;font-weight:700;color:#1a1a2e;margin:18px 0 10px;line-height:1.3;}
+        .answer-text h2{font-size:18px;font-weight:600;color:#1a1a2e;margin:16px 0 8px;line-height:1.35;border-bottom:1px solid #eee;padding-bottom:6px;}
+        .answer-text h3{font-size:16px;font-weight:600;color:#1a1a2e;margin:14px 0 6px;line-height:1.4;}
+        .answer-text p{margin:0 0 12px;}
+        .answer-text ul,.answer-text ol{margin:0 0 14px;padding-left:22px;}
+        .answer-text li{margin:0 0 6px;line-height:1.7;}
+        .answer-text strong{color:#1a1a2e;font-weight:600;}
+        .answer-text em{color:#1a1a2e;font-style:italic;}
+        .answer-text code{background:#f0f2f5;padding:1px 6px;border-radius:4px;font-family:monospace;font-size:13px;color:#c0392b;}
+        .answer-text hr{border:0;border-top:1px solid #e0e0e0;margin:18px 0;}
+        .answer-text blockquote{border-left:3px solid #4A90D9;padding:4px 14px;margin:10px 0;background:#f8f9fa;border-radius:0 6px 6px 0;}
+        .answer-text .cite-ref{display:inline-block;background:#e3f2fd;color:#1976D2;font-size:11px;font-weight:600;padding:1px 6px;border-radius:4px;margin:0 1px;font-family:monospace;}
+
+        .citations {
+            border-top: 1px solid #e0e0e0;
+            padding-top: 16px;
+        }
+
+        .citations-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .citation {
+            display:flex;align-items:center;gap:8px;font-size:13px;color:#444;padding:5px 0;border-bottom:1px dashed #eee;
+        }
+        .citation:last-child{border-bottom:0;}
+        .citation-file{color:#1a1a2e;font-weight:500;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+        .citation-meta{color:#888;font-family:monospace;font-size:11px;flex-shrink:0;}
+        .citation:hover .citation-file{color:#1976D2;}
+
+        /* Chat Section */
+        .chat-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 16px 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+            font-weight: 600;
+            font-size: 14px;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .chat-messages {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: #4A90D9;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.assistant {
+            align-self: flex-start;
+            background: #f0f0f0;
+            color: #333;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.system {
+            align-self: center;
+            background: #fff3cd;
+            color: #856404;
+            font-size: 13px;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 12px;
+            padding: 16px 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .chat-input-area button {
+            padding: 12px 24px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ddd;
+            border-top-color: #4A90D9;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .error {
+            color: #E74C3C;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-top">
+                <h1>PPP Intelligence - Bid Decision Dashboard</h1>
+                <div class="controls">
+                    <input
+                        type="text"
+                        id="projectId"
+                        placeholder="Enter Project ID"
+                        value=""
+                    />
+                    <button class="btn-primary" id="evaluateBtn" onclick="runEvaluation()">
+                        Evaluate Project
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="upload-section">
+            <h3>Upload Document</h3>
+            <div class="upload-form">
+                <input type="file" id="fileInput" accept=".pdf,.docx,.xlsx" />
+                <button class="btn-primary" id="uploadBtn" onclick="uploadDocument()">
+                    Upload
+                </button>
+            </div>
+            <div class="upload-status" id="uploadStatus"></div>
+        </div>
+
+        <div class="score-dashboard" id="scoreDashboard">
+            <div class="score-card recommendation">
+                <div class="score-label">Recommendation</div>
+                <div class="recommendation-text" id="recommendation">-</div>
+            </div>
+            <div class="score-card positive">
+                <div class="score-value" id="positiveCount">-</div>
+                <div class="score-label">Positive</div>
+            </div>
+            <div class="score-card negative">
+                <div class="score-value" id="negativeCount">-</div>
+                <div class="score-label">Negative</div>
+            </div>
+            <div class="score-card neutral">
+                <div class="score-value" id="neutralCount">-</div>
+                <div class="score-label">Neutral</div>
+            </div>
+            <div class="score-card insufficient">
+                <div class="score-value" id="insufficientCount">-</div>
+                <div class="score-label">Insufficient Evidence</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="panel">
+                <div class="panel-header">10 Bid Decision Questions</div>
+                <div class="questions-list" id="questionsList">
+                    <div class="answer-placeholder">
+                        Enter a Project ID and click "Evaluate Project" to see the 10 questions and answers.
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">Answer</div>
+                <div class="answer-panel" id="answerPanel">
+                    <div class="answer-placeholder">
+                        Select a question from the left to view its answer and evidence.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-section">
+            <div class="chat-header">Ask a Question</div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message system">
+                    Ask any question about this project. The system will search the uploaded documents and provide a cited answer.
+                </div>
+            </div>
+            <div class="chat-input-area">
+                <input
+                    type="text"
+                    id="chatInput"
+                    placeholder="Ask a question about this project..."
+                    onkeypress="if(event.key==='Enter')sendChatMessage()"
+                />
+                <button class="btn-primary" id="chatSendBtn" onclick="sendChatMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let evaluationData = null;
+        let selectedQuestionId = null;
+
+        const SENTIMENT_LABELS = {
+            positive: 'Positive',
+            negative: 'Negative',
+            neutral: 'Neutral',
+            insufficient: 'Insufficient Evidence'
+        };
+
+        const SENTIMENT_CLASSES = {
+            positive: 'sentiment-positive',
+            negative: 'sentiment-negative',
+            neutral: 'sentiment-neutral',
+            insufficient: 'sentiment-insufficient'
+        };
+
+        // Lightweight Markdown renderer (headings, lists, bold/italic, code, blockquotes, [E#] refs)
+        function escapeHtml(s) {
+            return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        }
+        function renderInline(text) {
+            let html = escapeHtml(text);
+            html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+            html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+            html = html.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
+            html = html.replace(/\[(E\d+)\]/g, '<span class="cite-ref">[$1]</span>');
+            return html;
+        }
+        function renderMarkdown(raw) {
+            if (!raw) return '';
+            const lines = String(raw).replace(/\r\n/g, '\n').split('\n');
+            const out = [];
+            let list = null, para = [];
+            const flushList = () => {
+                if (!list || !list.items.length) return;
+                out.push('<' + list.tag + '>');
+                for (const it of list.items) out.push('<li>' + renderInline(it) + '</li>');
+                out.push('</' + list.tag + '>');
+            };
+            const flushPara = () => {
+                if (para.length) { out.push('<p>' + renderInline(para.join(' ')) + '</p>'); para = []; }
+            };
+            const flushAll = () => { flushPara(); flushList(list); list = null; };
+            for (let i = 0; i < lines.length; i++) {
+                const t = lines[i].trim();
+                if (!t) { flushAll(); continue; }
+                if (/^-{3,}\s*$/.test(t)) { flushAll(); out.push('<hr/>'); continue; }
+                const h = /^(#{1,3})\s+(.+)$/.exec(t);
+                if (h) { flushAll(); out.push('<h'+h[1].length+'>'+renderInline(h[2])+'</h'+h[1].length+'>'); continue; }
+                if (/^>\s?/.test(t)) {
+                    flushAll();
+                    const bq = [];
+                    while (i < lines.length && /^>\s?/.test(lines[i].trim())) {
+                        bq.push(lines[i].trim().replace(/^>\s?/, ''));
+                        i++;
+                    }
+                    out.push('<blockquote>' + renderInline(bq.join(' ')) + '</blockquote>');
+                    continue;
+                }
+                const ul = /^[-*]\s+(.+)$/.exec(t);
+                if (ul) {
+                    flushPara();
+                    if (!list || list.tag !== 'ul') { flushList(list); list = { tag: 'ul', items: [] }; }
+                    list.items.push(ul[1]);
+                    continue;
+                }
+                const ol = /^\d+\.\s+(.+)$/.exec(t);
+                if (ol) {
+                    flushPara();
+                    if (!list || list.tag !== 'ol') { flushList(list); list = { tag: 'ol', items: [] }; }
+                    list.items.push(ol[1]);
+                    continue;
+                }
+                if (list) {
+                    const idx = list.items.length - 1;
+                    list.items[idx] = list.items[idx] + ' ' + t;
+                } else {
+                    para.push(t);
+                }
+            }
+            flushAll();
+            return out.join('\n');
+        }
+
+        async function runEvaluation() {
+            const projectId = document.getElementById('projectId').value.trim();
+            if (!projectId) {
+                alert('Please enter a Project ID');
+                return;
+            }
+
+            const btn = document.getElementById('evaluateBtn');
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading"></span> Evaluating...';
+
+            try {
+                const response = await fetch(`/projects/${encodeURIComponent(projectId)}/evaluate`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    const error = await response.text();
+                    throw new Error(error || `HTTP ${response.status}`);
+                }
+
+                evaluationData = await response.json();
+                renderEvaluation(evaluationData);
+            } catch (error) {
+                alert('Evaluation failed: ' + error.message);
+                console.error(error);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        }
+
+        async function uploadDocument() {
+            const projectId = document.getElementById('projectId').value.trim();
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            const statusEl = document.getElementById('uploadStatus');
+
+            if (!projectId) {
+                statusEl.textContent = 'Please enter a Project ID first';
+                statusEl.className = 'upload-status error';
+                return;
+            }
+
+            if (!file) {
+                statusEl.textContent = 'Please select a file';
+                statusEl.className = 'upload-status error';
+                return;
+            }
+
+            const uploadBtn = document.getElementById('uploadBtn');
+            uploadBtn.disabled = true;
+            statusEl.textContent = 'Uploading and processing...';
+            statusEl.className = 'upload-status';
+
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                const response = await fetch(`/projects/${encodeURIComponent(projectId)}/documents`, {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    const error = await response.text();
+                    throw new Error(error || `HTTP ${response.status}`);
+                }
+
+                statusEl.textContent = 'Upload complete! Auto-evaluating...';
+                statusEl.className = 'upload-status success';
+                fileInput.value = '';
+
+                await runEvaluation();
+            } catch (error) {
+                statusEl.textContent = 'Upload failed: ' + error.message;
+                statusEl.className = 'upload-status error';
+                console.error(error);
+            } finally {
+                uploadBtn.disabled = false;
+            }
+        }
+
+        function initFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            const projectId = params.get('project_id');
+            if (projectId) {
+                document.getElementById('projectId').value = projectId;
+                runEvaluation();
+            }
+        }
+
+        function renderEvaluation(data) {
+            const summary = data.summary;
+            document.getElementById('positiveCount').textContent = summary.positive;
+            document.getElementById('negativeCount').textContent = summary.negative;
+            document.getElementById('neutralCount').textContent = summary.neutral;
+            document.getElementById('insufficientCount').textContent = summary.insufficient;
+
+            const recommendationEl = document.getElementById('recommendation');
+            recommendationEl.textContent = summary.recommendation;
+            recommendationEl.className = 'recommendation-text ' + summary.color;
+
+            const questionsList = document.getElementById('questionsList');
+            questionsList.innerHTML = '';
+
+            data.questions.forEach((q, index) => {
+                const item = document.createElement('div');
+                item.className = 'question-item';
+                item.onclick = () => selectQuestion(q.id, q);
+                item.id = 'q-item-' + q.id;
+
+                item.innerHTML = `
+                    <div class="question-number">${index + 1}</div>
+                    <div class="question-text">
+                        <div class="question-category">${q.category}</div>
+                        ${q.question}
+                    </div>
+                    <div class="sentiment-badge ${SENTIMENT_CLASSES[q.sentiment]}">
+                        ${SENTIMENT_LABELS[q.sentiment]}
+                    </div>
+                `;
+
+                questionsList.appendChild(item);
+            });
+
+            if (data.questions.length > 0) {
+                selectQuestion(data.questions[0].id, data.questions[0]);
+            }
+        }
+
+        function selectQuestion(id, questionData) {
+            selectedQuestionId = id;
+
+            document.querySelectorAll('.question-item').forEach(el => {
+                el.classList.remove('active');
+            });
+
+            const activeItem = document.getElementById('q-item-' + id);
+            if (activeItem) {
+                activeItem.classList.add('active');
+            }
+
+            const answerPanel = document.getElementById('answerPanel');
+            const citationsHtml = questionData.citations && questionData.citations.length > 0
+                ? `
+                    <div class="citations">
+                        <div class="citations-title">Sources</div>
+                        ${questionData.citations.map((c, i) => `
+                            <div class="citation">
+                                <span class="cite-ref">[E${i + 1}]</span>
+                                <span class="citation-file">${c.filename}</span>
+                                <span class="citation-meta">Page ${c.page || 'N/A'} · Chunk ${c.chunk_id}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `
+                : '';
+
+            // Drop a leading duplicate heading if the LLM added one that repeats the category/question.
+            let rawAnswer = (questionData.answer || '').trim();
+            const firstLine = rawAnswer.split('\n', 1)[0].trim();
+            const cat = (questionData.category || '').toLowerCase();
+            const qnorm = (questionData.question || '').toLowerCase().replace(/[^a-z0-9 ]/g, '').slice(0, 60);
+            const fnorm = firstLine.replace(/^#+\s*/, '').toLowerCase().replace(/[^a-z0-9 ]/g, '');
+            if (/^#+\s/.test(firstLine) && (fnorm.includes(cat) || (qnorm && fnorm.includes(qnorm.split(' ').slice(0, 4).join(' '))))) {
+                rawAnswer = rawAnswer.split('\n').slice(1).join('\n').trim();
+            }
+
+            answerPanel.innerHTML = `
+                <div class="answer-header">
+                    <span class="answer-category">${questionData.category}</span>
+                    <span class="sentiment-badge ${SENTIMENT_CLASSES[questionData.sentiment]}">
+                        ${SENTIMENT_LABELS[questionData.sentiment]}
+                    </span>
+                </div>
+                <div class="answer-question">${questionData.question}</div>
+                <div class="answer-text">${renderMarkdown(rawAnswer)}</div>
+                ${citationsHtml}
+            `;
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const question = input.value.trim();
+            const projectId = document.getElementById('projectId').value.trim();
+
+            if (!question) return;
+            if (!projectId) {
+                alert('Please enter a Project ID first');
+                return;
+            }
+
+            const messagesContainer = document.getElementById('chatMessages');
+            const sendBtn = document.getElementById('chatSendBtn');
+
+            const userMessage = document.createElement('div');
+            userMessage.className = 'message user';
+            userMessage.textContent = question;
+            messagesContainer.appendChild(userMessage);
+
+            const loadingMessage = document.createElement('div');
+            loadingMessage.className = 'message assistant';
+            loadingMessage.innerHTML = '<span class="loading"></span>';
+            messagesContainer.appendChild(loadingMessage);
+
+            input.value = '';
+            sendBtn.disabled = true;
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            try {
+                const response = await fetch(`/projects/${encodeURIComponent(projectId)}/ask`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({ question }),
+                });
+
+                if (!response.ok) {
+                    const error = await response.text();
+                    throw new Error(error || `HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+                loadingMessage.remove();
+
+                const assistantMessage = document.createElement('div');
+                assistantMessage.className = 'message assistant';
+                assistantMessage.innerHTML = renderMarkdown(data.answer);
+                messagesContainer.appendChild(assistantMessage);
+
+                if (data.citations && data.citations.length > 0) {
+                    const citationMessage = document.createElement('div');
+                    citationMessage.className = 'message assistant';
+                    citationMessage.style.fontSize = '12px';
+                    citationMessage.style.color = '#666';
+                    citationMessage.style.background = '#f8f9fa';
+                    citationMessage.innerHTML = 'Sources: ' + data.citations.map((c, i) => `<span class="cite-ref">[E${i+1}]</span> ${c.filename}`).join(', ');
+                    messagesContainer.appendChild(citationMessage);
+                }
+            } catch (error) {
+                loadingMessage.remove();
+                const errorMessage = document.createElement('div');
+                errorMessage.className = 'message assistant';
+                errorMessage.style.background = '#f8d7da';
+                errorMessage.style.color = '#721c24';
+                errorMessage.textContent = 'Error: ' + error.message;
+                messagesContainer.appendChild(errorMessage);
+                console.error(error);
+            } finally {
+                sendBtn.disabled = false;
+                input.focus();
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        }
+    </script>
+    <script>
+        initFromUrl();
+    </script>
+</body>
+</html>

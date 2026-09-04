@@ -3,8 +3,29 @@ import re
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
-_FTS5_METACHARACTERS = re.compile(r'[\"*^()~?,\-]')
+# Characters that have special meaning in FTS5 MATCH syntax or break the
+# unicode61 tokenizer when left in raw form. We strip them defensively
+# from each token before quoting, and then wrap the token in double
+# quotes so any remaining special character is treated as a literal.
+# See: https://www.sqlite.org/fts5.html#fts5_strings
+_FTS5_METACHARACTERS = re.compile(r'[^\w\s]', flags=re.UNICODE)
 _FTS5_KEYWORDS = {"and", "or", "not"}
+_FTS5_STOPWORDS = {
+    "the", "a", "an", "is", "are", "was", "were", "be", "been", "being",
+    "of", "in", "on", "at", "to", "for", "with", "by", "from", "as",
+    "this", "that", "these", "those", "it", "its", "and", "or", "not",
+    "what", "which", "who", "whom", "whose", "do", "does", "did",
+    "have", "has", "had", "will", "would", "should", "could", "can",
+    "may", "might", "must", "shall",
+}
+
+
+def _sanitize_token(token: str) -> str:
+    """Strip FTS5-special chars and any embedded double quotes, return lowercase."""
+    cleaned = _FTS5_METACHARACTERS.sub(" ", token)
+    # Split on whitespace introduced by stripping punctuation
+    parts = [p for p in cleaned.split() if p]
+    return " ".join(parts).lower()
 
 
 def search_evidence(
@@ -21,23 +42,34 @@ def search_evidence(
     the evidence contract.
     """
 
-    safe_tokens = [
-        _FTS5_METACHARACTERS.sub("", token)
-        for token in query.split()
-    ]
+    raw_tokens = query.split()
+    safe_tokens: list[str] = []
 
-    safe_tokens = [
-        token.lower()
-        for token in safe_tokens
-        if len(token) > 2
-        and token.lower() not in _FTS5_KEYWORDS
-        and token.strip()
-    ]
+    for token in raw_tokens:
+        cleaned = _sanitize_token(token)
+        if not cleaned:
+            continue
+        if cleaned in _FTS5_KEYWORDS or cleaned in _FTS5_STOPWORDS:
+            continue
+        # Drop any individual word shorter than 2 chars after cleaning
+        words = [w for w in cleaned.split() if len(w) >= 2]
+        safe_tokens.extend(words)
 
-    if not safe_tokens:
+    # De-duplicate while preserving order to keep the MATCH expression compact
+    seen = set()
+    deduped: list[str] = []
+    for tok in safe_tokens:
+        if tok in seen:
+            continue
+        seen.add(tok)
+        deduped.append(tok)
+
+    if not deduped:
         return []
 
-    fts_query = " OR ".join(safe_tokens)
+    # Quote each token so any residual special character is treated as a
+    # literal string in the FTS5 MATCH expression.
+    fts_query = " OR ".join(f'"{tok}"' for tok in deduped)
 
     rows = db.execute(
         text(

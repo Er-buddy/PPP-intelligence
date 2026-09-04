@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PPP Intelligence — Document Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E1420;
+    --panel:#141B29;
+    --panel-alt:#1A2333;
+    --border:#28324A;
+    --border-soft:#212B3F;
+    --ink-hi:#EDEFF4;
+    --ink-lo:#8B93A7;
+    --ink-faint:#5B6478;
+    --accent:#E0A458;
+    --accent-dim:#3A3223;
+    --accent-2:#4FB0A5;
+    --danger:#E38178;
+    --danger-dim:#3A2323;
+    --radius:10px;
+    --font-display:'Space Grotesk',sans-serif;
+    --font-body:'IBM Plex Sans',sans-serif;
+    --font-mono:'IBM Plex Mono',monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink-hi);
+    font-family:var(--font-body);
+    font-size:14px;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--accent-dim);color:var(--accent);}
+  button{font-family:inherit;}
+  input,button{outline:none;}
+
+  .app{display:flex;flex-direction:column;height:100vh;}
+
+  /* ---------- Top bar ---------- */
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 20px;height:56px;flex:0 0 56px;
+    border-bottom:1px solid var(--border);
+    background:linear-gradient(180deg,#121826,#0F1521);
+  }
+  .brand{
+    font-family:var(--font-display);font-weight:700;font-size:16px;
+    letter-spacing:0.02em;display:flex;align-items:baseline;gap:10px;
+  }
+  .brand .mark{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:22px;height:22px;border-radius:5px;
+    background:var(--accent);color:#1A1204;font-family:var(--font-mono);
+    font-size:12px;font-weight:700;transform:rotate(-3deg);
+  }
+  .brand .tag{
+    font-family:var(--font-mono);font-weight:400;font-size:11px;
+    color:var(--ink-faint);letter-spacing:0.04em;text-transform:uppercase;
+  }
+  .conn{display:flex;align-items:center;gap:10px;}
+  .conn label{font-size:11px;color:var(--ink-faint);font-family:var(--font-mono);}
+  #baseUrl{
+    background:var(--panel-alt);border:1px solid var(--border);color:var(--ink-lo);
+    font-family:var(--font-mono);font-size:12px;padding:6px 9px;border-radius:6px;
+    width:220px;transition:border-color .15s;
+  }
+  #baseUrl:focus{border-color:var(--accent);color:var(--ink-hi);}
+  .dot{
+    width:10px;height:10px;border-radius:50%;background:var(--ink-faint);flex:0 0 auto;
+    transition:background .2s;cursor:default;position:relative;
+  }
+  .dot.ok{background:var(--accent-2);box-shadow:0 0 8px rgba(79,176,165,.6);}
+  .dot.bad{background:var(--danger);box-shadow:0 0 8px rgba(227,129,120,.6);}
+
+  /* ---------- Layout ---------- */
+  .body{flex:1;display:flex;min-height:0;}
+  .sidebar{
+    flex:0 0 280px;border-right:1px solid var(--border);
+    background:var(--panel);display:flex;flex-direction:column;
+    min-height:0;
+  }
+  .sidebar section{padding:16px;}
+  .sidebar h2{
+    font-family:var(--font-mono);font-size:11px;text-transform:uppercase;
+    letter-spacing:0.08em;color:var(--ink-faint);margin:0 0 12px;font-weight:500;
+  }
+  .projects{border-bottom:1px solid var(--border-soft);}
+
+  #newProjectForm{display:flex;gap:6px;margin-bottom:12px;}
+  #newProjectName{
+    flex:1;background:var(--panel-alt);border:1px solid var(--border);color:var(--ink-hi);
+    border-radius:6px;padding:7px 9px;font-size:13px;
+  }
+  #newProjectName:focus{border-color:var(--accent);}
+  #newProjectName::placeholder{color:var(--ink-faint);}
+  .btn{
+    background:var(--accent);color:#1A1204;border:none;border-radius:6px;
+    padding:7px 12px;font-size:13px;font-weight:600;cursor:pointer;
+    transition:transform .1s, filter .15s;
+  }
+  .btn:hover{filter:brightness(1.08);}
+  .btn:active{transform:scale(.97);}
+  .btn:disabled{opacity:.5;cursor:not-allowed;}
+  .btn.ghost{background:transparent;border:1px solid var(--border);color:var(--ink-lo);}
+  .btn.ghost:hover{border-color:var(--accent);color:var(--accent);filter:none;}
+
+  #projectList{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:3px;}
+  .project-item{
+    display:flex;flex-direction:column;gap:2px;padding:9px 10px;border-radius:7px;
+    cursor:pointer;border:1px solid transparent;
+  }
+  .project-item:hover{background:var(--panel-alt);}
+  .project-item.active{background:var(--accent-dim);border-color:#4A3B21;}
+  .project-item .pname{font-size:13px;font-weight:500;color:var(--ink-hi);}
+  .project-item.active .pname{color:var(--accent);}
+  .project-item .pid{font-family:var(--font-mono);font-size:10px;color:var(--ink-faint);}
+  .sidebar-empty{font-size:12px;color:var(--ink-faint);padding:4px 2px;line-height:1.5;}
+
+  /* Project breadcrumb — read-only label above the Documents section, so the
+     sidebar visually distinguishes "choosing a project" from "managing files
+     inside one". Populated by selectProject(); no function names changed. */
+  .doc-context{
+    display:flex;align-items:center;gap:6px;padding:0 2px 12px;
+    margin-bottom:4px;border-bottom:1px solid var(--border-soft);
+  }
+  .doc-context .ctx-label{
+    font-family:var(--font-mono);font-size:10px;text-transform:uppercase;
+    letter-spacing:.06em;color:var(--ink-faint);
+  }
+  .doc-context .ctx-name{
+    font-family:var(--font-body);font-size:12.5px;font-weight:500;color:var(--ink-hi);
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+
+  .documents{flex:1;overflow-y:auto;}
+  .dropzone{
+    border:1.5px dashed var(--border);border-radius:8px;padding:16px 10px;
+    text-align:center;font-size:12px;color:var(--ink-faint);cursor:pointer;
+    transition:border-color .15s,color .15s,background .15s;margin-bottom:12px;
+  }
+  .dropzone:hover,.dropzone.drag{border-color:var(--accent);color:var(--accent);background:rgba(224,164,88,.05);}
+  .dropzone small{display:block;margin-top:4px;font-family:var(--font-mono);letter-spacing:.05em;}
+  #docList{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;}
+  .doc-item{
+    background:var(--panel-alt);border:1px solid var(--border-soft);border-radius:7px;
+    padding:9px 10px;
+  }
+  .doc-name{font-size:12.5px;color:var(--ink-hi);word-break:break-all;margin-bottom:4px;}
+  .doc-meta{display:flex;align-items:center;justify-content:space-between;gap:6px;}
+  .doc-status{
+    font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.05em;
+    padding:2px 6px;border-radius:4px;
+  }
+  .doc-status.ready{color:var(--accent-2);background:rgba(79,176,165,.12);}
+  .doc-status.pending{color:var(--accent);background:var(--accent-dim);}
+  .doc-status.error{color:var(--danger);background:var(--danger-dim);}
+  .doc-chunks{font-family:var(--font-mono);font-size:10px;color:var(--ink-faint);}
+
+  /* ---------- Main workbench ---------- */
+  .workbench{flex:1;display:flex;flex-direction:column;min-height:0;position:relative;}
+  .empty{
+    display:flex;align-items:center;justify-content:center;
+    color:var(--ink-faint);font-size:13.5px;text-align:center;padding:40px;
+  }
+  .empty .empty-inner{max-width:340px;}
+  .empty .empty-mark{font-family:var(--font-mono);font-size:11px;color:var(--ink-faint);
+    letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;display:block;}
+
+  .banner{
+    margin:14px 20px 0;padding:10px 12px;border-radius:7px;font-size:12.5px;
+    background:var(--danger-dim);border:1px solid #4A2A26;color:var(--danger);
+    display:flex;justify-content:space-between;gap:10px;align-items:flex-start;
+  }
+  .banner.info{background:var(--accent-dim);border-color:#4A3B21;color:var(--accent);}
+  .banner button{background:none;border:none;color:inherit;cursor:pointer;font-size:14px;line-height:1;}
+
+  /* ---------- Evaluation Panel ---------- */
+  .eval-panel{flex:1;display:flex;flex-direction:column;min-height:0;overflow:hidden;}
+  .eval-header{
+    padding:14px 20px;border-bottom:1px solid var(--border);
+    background:var(--panel);
+  }
+  .eval-header h3{
+    font-family:var(--font-display);font-size:15px;font-weight:600;margin:0 0 10px;color:var(--ink-hi);
+  }
+
+  /* Score dashboard — restructured into a hero row (Recommendation) plus a
+     lighter secondary strip (the 4 sentiment counts), instead of one
+     uniform 5-column grid. updateScoreDashboard() targets the same
+     #recommendation/#positiveCount/etc ids, so no JS changes are required. */
+  .score-dashboard{display:flex;flex-direction:column;gap:10px;}
+
+  .score-hero{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    background:var(--panel-alt);border-radius:10px;padding:16px 20px;
+    border-left:4px solid var(--border);
+  }
+  .score-hero.color-green{border-left-color:#27AE60;background:linear-gradient(90deg,rgba(39,174,96,.10),var(--panel-alt) 60%);}
+  .score-hero.color-red{border-left-color:#E74C3C;background:linear-gradient(90deg,rgba(231,76,60,.10),var(--panel-alt) 60%);}
+  .score-hero.color-yellow{border-left-color:#F39C12;background:linear-gradient(90deg,rgba(243,156,18,.10),var(--panel-alt) 60%);}
+  .score-hero-label{
+    font-family:var(--font-mono);font-size:11px;text-transform:uppercase;
+    letter-spacing:.08em;color:var(--ink-faint);margin-bottom:4px;
+  }
+  .recommendation-text{
+    font-family:var(--font-display);font-size:30px;font-weight:700;line-height:1.1;
+  }
+  .recommendation-text.green{color:#27AE60;}
+  .recommendation-text.red{color:#E74C3C;}
+  .recommendation-text.yellow{color:#F39C12;}
+  .score-hero-score{
+    font-family:var(--font-mono);font-size:13px;color:var(--ink-lo);flex-shrink:0;
+    text-align:right;
+  }
+
+  .score-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+  .score-card{
+    background:var(--panel-alt);border-radius:8px;padding:10px 12px;text-align:center;
+    border-left:3px solid var(--border);
+  }
+  .score-card.positive{border-left-color:#27AE60;}
+  .score-card.negative{border-left-color:#E74C3C;}
+  .score-card.neutral{border-left-color:#F39C12;}
+  .score-card.insufficient{border-left-color:#95A5A6;}
+  .score-value{font-size:20px;font-weight:700;margin-bottom:2px;}
+  .score-card.positive .score-value{color:#27AE60;}
+  .score-card.negative .score-value{color:#E74C3C;}
+  .score-card.neutral .score-value{color:#F39C12;}
+  .score-card.insufficient .score-value{color:#95A5A6;}
+  .score-label{
+    font-family:var(--font-mono);font-size:10px;color:var(--ink-faint);
+    text-transform:uppercase;letter-spacing:.05em;
+  }
+
+  .eval-body{flex:1;display:flex;min-height:0;overflow:hidden;}
+  .questions-pane{
+    flex:0 0 45%;border-right:1px solid var(--border);overflow-y:auto;
+    background:var(--panel);
+  }
+  .questions-pane-header{
+    padding:12px 16px;border-bottom:1px solid var(--border-soft);
+    font-family:var(--font-mono);font-size:11px;text-transform:uppercase;
+    letter-spacing:.08em;color:var(--ink-faint);font-weight:500;
+  }
+  .question-item{
+    padding:14px 16px;border-bottom:1px solid var(--border-soft);cursor:pointer;
+    transition:background .15s;display:flex;align-items:flex-start;gap:10px;
+  }
+  .question-item:hover{background:var(--panel-alt);}
+  .question-item.active{background:var(--accent-dim);border-left:3px solid var(--accent);}
+  .question-number{
+    width:24px;height:24px;border-radius:50%;background:var(--panel-alt);
+    display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;
+    flex-shrink:0;margin-top:1px;border:1px solid var(--border);
+    font-family:var(--font-mono);
+  }
+  .question-item.active .question-number{background:var(--accent);color:#1A1204;border-color:var(--accent);}
+  .question-text{flex:1;font-size:13px;color:var(--ink-hi);line-height:1.5;}
+  .question-category{
+    font-family:var(--font-mono);font-size:10px;color:var(--ink-faint);
+    text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;
+  }
+  .sentiment-badge{
+    padding:2px 7px;border-radius:10px;font-size:10px;font-weight:600;
+    text-transform:uppercase;letter-spacing:.3px;flex-shrink:0;margin-top:1px;
+    font-family:var(--font-mono);
+  }
+  .sentiment-positive{background:rgba(39,174,96,.15);color:#27AE60;}
+  .sentiment-negative{background:rgba(231,76,60,.15);color:#E74C3C;}
+  .sentiment-neutral{background:rgba(243,156,18,.15);color:#F39C12;}
+  .sentiment-insufficient{background:rgba(149,165,166,.15);color:#95A5A6;}
+
+  .answer-pane{flex:1;overflow-y:auto;padding:20px;background:var(--bg);}
+  .answer-placeholder{color:var(--ink-faint);text-align:center;padding:60px 20px;font-size:13px;}
+  .answer-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;flex-wrap:wrap;gap:8px;}
+  .answer-category{
+    display:inline-block;padding:4px 10px;background:var(--panel-alt);border-radius:14px;
+    font-family:var(--font-mono);font-size:11px;color:var(--ink-lo);text-transform:uppercase;letter-spacing:.05em;
+  }
+  .answer-question{font-size:15px;font-weight:600;color:var(--ink-hi);margin-bottom:14px;line-height:1.5;}
+  .answer-text{font-size:14px;line-height:1.8;color:var(--ink-lo);margin-bottom:18px;}
+  .answer-text h1{font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--ink-hi);margin:18px 0 10px;line-height:1.3;}
+  .answer-text h2{font-family:var(--font-display);font-size:17px;font-weight:600;color:var(--ink-hi);margin:16px 0 8px;line-height:1.35;border-bottom:1px solid var(--border-soft);padding-bottom:6px;}
+  .answer-text h3{font-family:var(--font-display);font-size:15px;font-weight:600;color:var(--ink-hi);margin:14px 0 6px;line-height:1.4;}
+  .answer-text p{margin:0 0 12px;}
+  .answer-text ul,.answer-text ol{margin:0 0 14px;padding-left:22px;}
+  .answer-text li{margin:0 0 6px;line-height:1.7;}
+  .answer-text li::marker{color:var(--ink-faint);}
+  .answer-text strong{color:var(--ink-hi);font-weight:600;}
+  .answer-text em{color:var(--ink-hi);font-style:italic;}
+  .answer-text code{background:var(--panel-alt);padding:1px 6px;border-radius:4px;font-family:var(--font-mono);font-size:13px;color:var(--accent);}
+  .answer-text hr{border:0;border-top:1px solid var(--border-soft);margin:18px 0;}
+  .answer-text blockquote{border-left:3px solid var(--accent);padding:4px 14px;margin:10px 0;color:var(--ink-lo);background:var(--panel-alt);border-radius:0 6px 6px 0;}
+  .answer-text .cite-ref{display:inline-block;background:var(--accent-dim);color:var(--accent);font-size:11px;font-weight:600;padding:1px 6px;border-radius:4px;margin:0 1px;font-family:var(--font-mono);letter-spacing:.02em;}
+  .citations{border-top:1px solid var(--border);padding-top:14px;}
+  .citations-title{font-family:var(--font-mono);font-size:11px;font-weight:600;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;}
+  .citation{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink-lo);padding:5px 0;cursor:default;border-bottom:1px dashed var(--border-soft);}
+  .citation:last-child{border-bottom:0;}
+  .citation-file{color:var(--ink-hi);font-weight:500;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .citation-meta{color:var(--ink-faint);font-family:var(--font-mono);font-size:11px;flex-shrink:0;}
+  .citation:hover .citation-file{color:var(--accent);}
+
+  /* ---------- Workbench tabs ---------- */
+  /* Evaluation and Chat used to be stacked in the same column, splitting a
+     fixed height (chat capped at 280px) — a chat answer rendered in a
+     cramped strip while the 5 questions sat untouched above it. They're now
+     mutually-exclusive tabs so whichever is active gets the full remaining
+     height. Same render functions underneath; this only toggles [hidden]. */
+  .workbench-tabs{
+    display:flex;gap:4px;padding:10px 20px 0;border-bottom:1px solid var(--border);
+    background:var(--panel);flex:0 0 auto;
+  }
+  .wb-tab{
+    background:none;border:none;color:var(--ink-faint);cursor:pointer;
+    font-family:var(--font-mono);font-size:12px;text-transform:uppercase;letter-spacing:.05em;
+    padding:9px 4px 10px;margin-right:20px;border-bottom:2px solid transparent;
+    display:flex;align-items:center;gap:7px;transition:color .15s,border-color .15s;
+  }
+  .wb-tab:hover{color:var(--ink-hi);}
+  .wb-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+  .tab-badge{
+    display:inline-flex;align-items:center;justify-content:center;
+    min-width:16px;height:16px;padding:0 4px;border-radius:8px;
+    background:var(--accent-2);color:#0E1420;font-size:10px;font-weight:700;
+    font-family:var(--font-body);letter-spacing:0;
+  }
+
+  /* ---------- Chat Section ---------- */
+  .chat-section{
+    flex:1;border-top:1px solid var(--border);background:var(--panel);
+    display:flex;flex-direction:column;min-height:0;
+  }
+  .chat-header{
+    padding:10px 20px;border-bottom:1px solid var(--border-soft);
+    font-family:var(--font-mono);font-size:11px;text-transform:uppercase;
+    letter-spacing:.08em;color:var(--ink-faint);font-weight:500;
+  }
+  .chat-messages{
+    flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:12px;
+  }
+  .message{max-width:80%;padding:10px 14px;border-radius:10px;font-size:13.5px;line-height:1.6;}
+  .message.user{align-self:flex-end;background:var(--accent);color:#1A1204;border-bottom-right-radius:4px;}
+  .message.assistant{align-self:flex-start;background:var(--panel-alt);color:var(--ink-hi);border-bottom-left-radius:4px;white-space:normal;}
+  .message.assistant h1,.message.assistant h2,.message.assistant h3{font-family:var(--font-display);color:var(--ink-hi);margin:8px 0 6px;line-height:1.3;}
+  .message.assistant h1{font-size:16px;font-weight:700;}
+  .message.assistant h2{font-size:14px;font-weight:600;}
+  .message.assistant h3{font-size:13px;font-weight:600;}
+  .message.assistant p{margin:0 0 8px;}
+  .message.assistant ul,.message.assistant ol{margin:0 0 8px;padding-left:20px;}
+  .message.assistant li{margin:0 0 4px;line-height:1.6;}
+  .message.assistant strong{color:var(--ink-hi);font-weight:600;}
+  .message.assistant em{color:var(--ink-hi);font-style:italic;}
+  .message.assistant code{background:var(--bg);padding:1px 5px;border-radius:4px;font-family:var(--font-mono);font-size:12px;color:var(--accent);}
+  .message.assistant blockquote{border-left:2px solid var(--accent);padding:2px 10px;margin:6px 0;color:var(--ink-lo);}
+  .message.assistant .cite-ref{display:inline-block;background:var(--bg);color:var(--accent);font-size:10px;font-weight:600;padding:0 5px;border-radius:3px;margin:0 1px;font-family:var(--font-mono);}
+  .message.system{align-self:center;background:var(--accent-dim);color:var(--accent);font-size:12px;max-width:90%;text-align:center;}
+  .chat-input-area{display:flex;gap:10px;padding:10px 20px;border-top:1px solid var(--border-soft);}
+  .chat-input-area input{
+    flex:1;padding:10px 12px;border:1px solid var(--border);border-radius:8px;
+    font-size:13px;background:var(--panel-alt);color:var(--ink-hi);
+  }
+  .chat-input-area input:focus{border-color:var(--accent);}
+  .chat-input-area input::placeholder{color:var(--ink-faint);}
+
+  .loading{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* ---------- Progress / Status ---------- */
+  [hidden]{display:none !important;}
+  .progress-overlay{
+    position:absolute;top:0;left:0;right:0;bottom:0;
+    background:rgba(14,20,32,.85);backdrop-filter:blur(4px);
+    display:flex;align-items:center;justify-content:center;z-index:10;
+  }
+  .progress-box{
+    background:var(--panel);border:1px solid var(--border);border-radius:12px;
+    padding:24px 32px;max-width:420px;width:90%;text-align:center;
+  }
+  .progress-box h4{
+    font-family:var(--font-display);font-size:15px;margin:0 0 16px;color:var(--ink-hi);
+  }
+  .progress-track{
+    height:6px;background:var(--panel-alt);border-radius:3px;overflow:hidden;margin-bottom:12px;
+  }
+  .progress-fill{
+    height:100%;background:var(--accent);width:0%;transition:width .3s ease;
+  }
+  .progress-status{
+    font-size:12px;color:var(--ink-faint);font-family:var(--font-mono);
+    min-height:18px;
+  }
+  .progress-question{
+    font-size:12px;color:var(--ink-lo);margin-top:8px;line-height:1.4;
+    max-height:60px;overflow:hidden;
+  }
+
+  /* Inline (non-blocking) progress indicator, used for re-evaluations once
+     a project already has results — replaces the full-screen overlay so a
+     quick re-check doesn't feel like a cold start. */
+  .progress-inline{
+    margin:0 20px 14px;padding:10px 14px;border-radius:8px;
+    background:var(--panel-alt);border:1px solid var(--border-soft);
+    display:flex;align-items:center;gap:12px;
+  }
+  .progress-inline .spinner-sm{
+    width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--accent);
+    border-radius:50%;animation:spin 1s linear infinite;flex-shrink:0;
+  }
+  .progress-inline .progress-inline-text{
+    flex:1;min-width:0;
+  }
+  .progress-inline .progress-inline-status{
+    font-family:var(--font-mono);font-size:11px;color:var(--ink-lo);
+  }
+  .progress-inline .progress-inline-question{
+    font-size:12px;color:var(--ink-faint);margin-top:2px;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+
+  ::-webkit-scrollbar{width:8px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+  ::-webkit-scrollbar-thumb{background:#232D42;border-radius:4px;}
+  ::-webkit-scrollbar-thumb:hover{background:#2C3855;}
+
+  @media (max-width:900px){
+    .sidebar{flex:0 0 220px;}
+    .eval-body{flex-direction:column;}
+    .questions-pane{flex:0 0 50%;}
+    .thread-inner,.askbar-inner{padding:0 14px;}
+    .score-hero{flex-direction:column;align-items:flex-start;gap:6px;}
+    .score-hero-score{text-align:left;}
+    .score-strip{grid-template-columns:repeat(2,1fr);}
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><span class="mark">C</span>PPP Intelligence <span class="tag">bid intelligence</span></div>
+    <div class="conn">
+      <label for="baseUrl">API</label>
+      <input id="baseUrl" spellcheck="false" value="http://127.0.0.1:8000">
+      <span class="dot" id="connDot" role="status" aria-label="Connection status: unknown" title="Connection status: unknown"></span>
+    </div>
+  </header>
+
+  <div class="body">
+    <aside class="sidebar">
+      <section class="projects">
+        <h2>Projects</h2>
+        <form id="newProjectForm">
+          <input id="newProjectName" placeholder="New project name…" autocomplete="off">
+          <button class="btn" type="submit">Add</button>
+        </form>
+        <ul id="projectList"></ul>
+        <div class="sidebar-empty" id="projectsEmpty">No projects yet — add one above.</div>
+      </section>
+
+      <section class="documents" id="docSection" hidden>
+        <div class="doc-context" id="docContext">
+          <span class="ctx-label">Project</span>
+          <span class="ctx-name" id="docContextName"></span>
+        </div>
+        <h2>Documents</h2>
+        <div class="dropzone" id="dropzone">
+          Drop a file, or click to upload
+          <small>PDF · DOCX · XLSX</small>
+        </div>
+        <input type="file" id="fileInput" accept=".pdf,.docx,.xlsx" hidden>
+        <ul id="docList"></ul>
+      </section>
+    </aside>
+
+    <main class="workbench" id="workbench">
+      <div id="bannerHost"></div>
+
+      <div class="empty" id="emptyState">
+        <div class="empty-inner">
+          <span class="empty-mark">PPP Intelligence</span>
+          Select or create a project on the left, then upload a document. The system will automatically evaluate the 10 bid-decision questions.
+        </div>
+      </div>
+
+      <div class="workbench-tabs" id="workbenchTabs" hidden>
+        <button class="wb-tab active" id="tabEvalBtn" type="button">Evaluation</button>
+        <button class="wb-tab" id="tabChatBtn" type="button">Chat <span class="tab-badge" id="chatBadge" hidden>0</span></button>
+      </div>
+
+      <div class="eval-panel" id="evalPanel" hidden>
+        <div class="eval-header">
+          <h3>Bid Decision Evaluation</h3>
+          <div class="score-dashboard">
+            <div class="score-hero" id="scoreHero">
+              <div>
+                <div class="score-hero-label">Recommendation</div>
+                <div class="recommendation-text" id="recommendation">-</div>
+              </div>
+              <div class="score-hero-score" id="scoreHeroScore"></div>
+            </div>
+            <div class="score-strip">
+              <div class="score-card positive">
+                <div class="score-value" id="positiveCount">-</div>
+                <div class="score-label">Positive</div>
+              </div>
+              <div class="score-card negative">
+                <div class="score-value" id="negativeCount">-</div>
+                <div class="score-label">Negative</div>
+              </div>
+              <div class="score-card neutral">
+                <div class="score-value" id="neutralCount">-</div>
+                <div class="score-label">Neutral</div>
+              </div>
+              <div class="score-card insufficient">
+                <div class="score-value" id="insufficientCount">-</div>
+                <div class="score-label">Insufficient Evidence</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="inlineProgressHost"></div>
+
+        <div class="eval-body">
+          <div class="questions-pane">
+            <div class="questions-pane-header">5 Bid Decision Questions</div>
+            <div id="questionsList"></div>
+          </div>
+
+          <div class="answer-pane" id="answerPanel">
+            <div class="answer-placeholder">Select a question from the left to view its answer and evidence.</div>
+          </div>
+        </div>
+
+        <div class="progress-overlay" id="progressOverlay" hidden>
+          <div class="progress-box">
+            <h4>Evaluating Project...</h4>
+            <div class="progress-track">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-status" id="progressStatus" aria-live="polite">Preparing...</div>
+            <div class="progress-question" id="progressQuestion"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-section" id="chatSection" hidden>
+        <div class="chat-header">Ask a Question</div>
+        <div class="chat-messages" id="chatMessages">
+          <div class="message system">
+            Ask any question about this project's documents. The system will search the uploaded documents and provide a cited answer.
+          </div>
+        </div>
+        <div class="chat-input-area">
+          <input type="text" id="questionInput" placeholder="Ask a question about this project's documents…" autocomplete="off">
+          <button class="btn" type="button" id="askBtn">Ask</button>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+(() => {
+  const state = {
+    projects: [],       // {id, name, documents: [], messages: [], evaluation: null}
+    currentId: null,
+    evaluating: false,
+    activeTab: 'eval',  // 'eval' | 'chat' — which of the two mutually-exclusive panels is showing
+    unreadChat: 0,       // chat messages that arrived while the eval tab was active
+  };
+
+  const el = {
+    baseUrl: document.getElementById('baseUrl'),
+    connDot: document.getElementById('connDot'),
+    newProjectForm: document.getElementById('newProjectForm'),
+    newProjectName: document.getElementById('newProjectName'),
+    projectList: document.getElementById('projectList'),
+    projectsEmpty: document.getElementById('projectsEmpty'),
+    docSection: document.getElementById('docSection'),
+    docContextName: document.getElementById('docContextName'),
+    dropzone: document.getElementById('dropzone'),
+    fileInput: document.getElementById('fileInput'),
+    docList: document.getElementById('docList'),
+    emptyState: document.getElementById('emptyState'),
+    workbenchTabs: document.getElementById('workbenchTabs'),
+    tabEvalBtn: document.getElementById('tabEvalBtn'),
+    tabChatBtn: document.getElementById('tabChatBtn'),
+    chatBadge: document.getElementById('chatBadge'),
+    evalPanel: document.getElementById('evalPanel'),
+    chatSection: document.getElementById('chatSection'),
+    recommendation: document.getElementById('recommendation'),
+    scoreHero: document.getElementById('scoreHero'),
+    scoreHeroScore: document.getElementById('scoreHeroScore'),
+    positiveCount: document.getElementById('positiveCount'),
+    negativeCount: document.getElementById('negativeCount'),
+    neutralCount: document.getElementById('neutralCount'),
+    insufficientCount: document.getElementById('insufficientCount'),
+    questionsList: document.getElementById('questionsList'),
+    answerPanel: document.getElementById('answerPanel'),
+    chatMessages: document.getElementById('chatMessages'),
+    questionInput: document.getElementById('questionInput'),
+    askBtn: document.getElementById('askBtn'),
+    bannerHost: document.getElementById('bannerHost'),
+    inlineProgressHost: document.getElementById('inlineProgressHost'),
+    progressOverlay: document.getElementById('progressOverlay'),
+    progressFill: document.getElementById('progressFill'),
+    progressStatus: document.getElementById('progressStatus'),
+    progressQuestion: document.getElementById('progressQuestion'),
+  };
+
+  function baseUrl() {
+    return el.baseUrl.value.trim().replace(/\/+$/, '');
+  }
+
+  function currentProject() {
+    return state.projects.find(p => p.id === state.currentId) || null;
+  }
+
+  function showBanner(message, tone) {
+    el.bannerHost.innerHTML = '';
+    const div = document.createElement('div');
+    div.className = 'banner' + (tone === 'info' ? ' info' : '');
+    div.innerHTML = `<span></span><button aria-label="dismiss">×</button>`;
+    div.querySelector('span').textContent = message;
+    div.querySelector('button').onclick = () => div.remove();
+    el.bannerHost.appendChild(div);
+  }
+
+  // Sets the connection dot's visual state AND its accessible name/tooltip —
+  // previously this was a color-only signal with no text alternative.
+  function setConnState(isOk) {
+    el.connDot.className = 'dot ' + (isOk ? 'ok' : 'bad');
+    const label = 'Connection status: ' + (isOk ? 'connected' : 'unreachable');
+    el.connDot.setAttribute('aria-label', label);
+    el.connDot.setAttribute('title', label);
+  }
+
+  // ---------- Workbench tabs (Evaluation / Chat) ----------
+
+  function showWorkbenchTabs() {
+    el.workbenchTabs.hidden = false;
+  }
+  function hideWorkbenchTabs() {
+    el.workbenchTabs.hidden = true;
+    el.evalPanel.hidden = true;
+    el.chatSection.hidden = true;
+  }
+  function updateChatBadge() {
+    el.chatBadge.textContent = String(state.unreadChat);
+    el.chatBadge.hidden = state.unreadChat === 0;
+  }
+  function setActiveTab(tab) {
+    state.activeTab = tab;
+    el.tabEvalBtn.classList.toggle('active', tab === 'eval');
+    el.tabChatBtn.classList.toggle('active', tab === 'chat');
+    el.evalPanel.hidden = tab !== 'eval';
+    el.chatSection.hidden = tab !== 'chat';
+    if (tab === 'chat') {
+      state.unreadChat = 0;
+      updateChatBadge();
+      el.questionInput.focus();
+      el.chatMessages.scrollTop = el.chatMessages.scrollHeight;
+    }
+  }
+  el.tabEvalBtn.addEventListener('click', () => setActiveTab('eval'));
+  el.tabChatBtn.addEventListener('click', () => setActiveTab('chat'));
+
+  async function api(path, opts = {}) {
+    let res;
+    try {
+      res = await fetch(baseUrl() + path, opts);
+    } catch (err) {
+      setConnState(false);
+      throw new Error(
+        `Could not reach ${baseUrl()}. Is the server running, and does it allow CORS from this page?`
+      );
+    }
+    setConnState(true);
+    if (!res.ok) {
+      let detail = res.statusText;
+      try {
+        const body = await res.json();
+        detail = body.detail || detail;
+      } catch (_) {}
+      throw new Error(`${res.status}: ${detail}`);
+    }
+    return res.json();
+  }
+
+  // ---------- Projects ----------
+
+  el.newProjectForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = el.newProjectName.value.trim();
+    if (!name) return;
+    const btn = el.newProjectForm.querySelector('button');
+    btn.disabled = true;
+    try {
+      const project = await api('/projects', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name }),
+      });
+      state.projects.push({ id: project.id, name: project.name, documents: [], messages: [], evaluation: null });
+      el.newProjectName.value = '';
+      selectProject(project.id);
+    } catch (err) {
+      showBanner(err.message);
+    } finally {
+      btn.disabled = false;
+    }
+  });
+
+  function renderProjects() {
+    el.projectList.innerHTML = '';
+    el.projectsEmpty.hidden = state.projects.length > 0;
+    for (const p of state.projects) {
+      const li = document.createElement('li');
+      li.className = 'project-item' + (p.id === state.currentId ? ' active' : '');
+      li.innerHTML = `<span class="pname"></span><span class="pid"></span>`;
+      li.querySelector('.pname').textContent = p.name;
+      li.querySelector('.pid').textContent = p.id;
+      li.onclick = () => selectProject(p.id);
+      el.projectList.appendChild(li);
+    }
+  }
+
+  function selectProject(id) {
+    state.currentId = id;
+    renderProjects();
+    el.docSection.hidden = false;
+    el.emptyState.hidden = true;
+    const project = currentProject();
+    if (project) el.docContextName.textContent = project.name;
+    renderDocuments();
+    renderChatMessages();
+    state.unreadChat = 0;
+    updateChatBadge();
+    // Only reveal the tabs/eval panel if THIS project already has results —
+    // otherwise switching from a previously-evaluated project would leave
+    // its stale eval content showing until the new project finishes evaluating.
+    if (project && project.evaluation) {
+      showWorkbenchTabs();
+      renderEvaluation();
+      setActiveTab('eval');
+    } else {
+      hideWorkbenchTabs();
+    }
+  }
+
+  // ---------- Documents ----------
+
+  el.dropzone.addEventListener('click', () => el.fileInput.click());
+  el.fileInput.addEventListener('change', () => {
+    if (el.fileInput.files[0]) uploadDocument(el.fileInput.files[0]);
+    el.fileInput.value = '';
+  });
+  ['dragenter', 'dragover'].forEach(evt =>
+    el.dropzone.addEventListener(evt, (e) => { e.preventDefault(); el.dropzone.classList.add('drag'); })
+  );
+  ['dragleave', 'drop'].forEach(evt =>
+    el.dropzone.addEventListener(evt, (e) => { e.preventDefault(); el.dropzone.classList.remove('drag'); })
+  );
+  el.dropzone.addEventListener('drop', (e) => {
+    const file = e.dataTransfer.files[0];
+    if (file) uploadDocument(file);
+  });
+
+  async function uploadDocument(file) {
+    const project = currentProject();
+    if (!project) return;
+    const ext = '.' + file.name.split('.').pop().toLowerCase();
+    if (!['.pdf', '.docx', '.xlsx'].includes(ext)) {
+      showBanner('Supported formats: PDF, DOCX, XLSX');
+      return;
+    }
+    const placeholder = { id: 'pending-' + Date.now(), filename: file.name, chunks: null, status: 'pending' };
+    project.documents.push(placeholder);
+    renderDocuments();
+
+    const form = new FormData();
+    form.append('file', file);
+    try {
+      const doc = await api(`/projects/${project.id}/documents`, { method: 'POST', body: form });
+      Object.assign(placeholder, {
+        id: doc.document_id, filename: doc.filename, chunks: doc.chunks, status: doc.status,
+      });
+      showBanner('Document uploaded successfully. Running evaluation...', 'info');
+      await runEvaluationStream();
+    } catch (err) {
+      placeholder.status = 'error';
+      showBanner(err.message);
+    }
+    renderDocuments();
+  }
+
+  function renderDocuments() {
+    const project = currentProject();
+    el.docList.innerHTML = '';
+    if (!project) return;
+    for (const d of project.documents) {
+      const li = document.createElement('li');
+      li.className = 'doc-item';
+      const statusLabel = d.status === 'pending' ? 'ingesting…' : d.status;
+      li.innerHTML = `
+        <div class="doc-name"></div>
+        <div class="doc-meta">
+          <span class="doc-status ${d.status}"></span>
+          <span class="doc-chunks"></span>
+        </div>`;
+      li.querySelector('.doc-name').textContent = d.filename;
+      li.querySelector('.doc-status').textContent = statusLabel;
+      li.querySelector('.doc-chunks').textContent = d.chunks != null ? `${d.chunks} chunks` : '';
+      el.docList.appendChild(li);
+    }
+  }
+
+  // ---------- Evaluation ----------
+
+  // Renders the lightweight, non-blocking progress indicator used for
+  // re-evaluations (once a project already has a completed evaluation).
+  // The full-screen overlay is reserved for the very first evaluation of a
+  // project, where "starting from scratch" is actually true.
+  function renderInlineProgress(statusText, questionText) {
+    el.inlineProgressHost.innerHTML = `
+      <div class="progress-inline">
+        <div class="spinner-sm"></div>
+        <div class="progress-inline-text">
+          <div class="progress-inline-status" aria-live="polite"></div>
+          <div class="progress-inline-question"></div>
+        </div>
+      </div>`;
+    el.inlineProgressHost.querySelector('.progress-inline-status').textContent = statusText;
+    el.inlineProgressHost.querySelector('.progress-inline-question').textContent = questionText || '';
+  }
+  function clearInlineProgress() {
+    el.inlineProgressHost.innerHTML = '';
+  }
+
+  async function runEvaluationStream() {
+    const project = currentProject();
+    if (!project || state.evaluating) return;
+    state.evaluating = true;
+
+    // First-run (no prior evaluation) gets the full blocking overlay;
+    // a re-run on an already-populated eval panel gets the lighter inline
+    // indicator instead, so a quick re-check doesn't feel like a cold start.
+    const isFirstRun = !project.evaluation;
+
+    showWorkbenchTabs();
+    setActiveTab('eval');
+    if (isFirstRun) {
+      el.progressOverlay.hidden = false;
+      el.questionsList.innerHTML = '';
+      el.answerPanel.innerHTML = '<div class="answer-placeholder">Evaluation in progress...</div>';
+    } else {
+      renderInlineProgress('Preparing...', '');
+    }
+
+    const total = 5;
+    let completed = 0;
+    const results = [];
+
+    const finishWith = (summary) => {
+      project.evaluation = { summary, questions: results };
+      updateScoreDashboard(summary);
+      if (isFirstRun) {
+        el.progressOverlay.hidden = true;
+      } else {
+        clearInlineProgress();
+      }
+      state.evaluating = false;
+      if (results.length > 0) selectQuestion(results[0].id, results[0]);
+    };
+
+    const summaryFromResults = () => {
+      const positive = results.filter(r => r.sentiment === 'positive').length;
+      const negative = results.filter(r => r.sentiment === 'negative').length;
+      const neutral = results.filter(r => r.sentiment === 'neutral').length;
+      const insufficient = results.filter(r => r.sentiment === 'insufficient').length;
+      const recommendation = positive >= 4 ? 'BID' : negative >= 2 || insufficient >= 2 ? 'NO-BID' : 'CLARIFY';
+      const color = positive >= 4 ? 'green' : negative >= 2 || insufficient >= 2 ? 'red' : 'yellow';
+      return { positive, negative, neutral, insufficient, total: results.length, score: `${positive}/${results.length}`, recommendation, color };
+    };
+
+    const safetyTimeout = setTimeout(() => {
+      if (state.evaluating && results.length > 0) {
+        console.warn('Evaluation stream safety timeout triggered');
+        finishWith(summaryFromResults());
+        showBanner('Evaluation complete! (timeout fallback)', 'info');
+      }
+    }, 30000);
+
+    try {
+      const response = await fetch(`${baseUrl()}/projects/${project.id}/evaluate/stream`, {
+        method: 'POST',
+        headers: { 'Accept': 'application/x-ndjson' },
+      });
+
+      if (!response.ok) {
+        const error = await response.text();
+        throw new Error(error || `HTTP ${response.status}`);
+      }
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) {
+          console.log('Stream ended, buffer length:', buffer.length);
+          break;
+        }
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
+
+        for (const line of lines) {
+          if (!line.trim()) continue;
+          try {
+            const msg = JSON.parse(line);
+            if (msg.type === 'progress') {
+              completed = msg.current;
+              const pct = Math.round((completed / total) * 100);
+              if (isFirstRun) {
+                el.progressFill.style.width = pct + '%';
+                el.progressStatus.textContent = `Question ${completed} of ${total}`;
+                el.progressQuestion.textContent = msg.question;
+              } else {
+                renderInlineProgress(`Re-evaluating — question ${completed} of ${total}`, msg.question);
+              }
+            } else if (msg.type === 'result') {
+              results.push(msg.data);
+              renderEvaluationResult(msg.data);
+            } else if (msg.type === 'complete') {
+              finishWith(msg.summary);
+              showBanner('Evaluation complete!', 'info');
+              clearTimeout(safetyTimeout);
+              return;
+            }
+          } catch (e) {
+            console.error('Failed to parse NDJSON line:', e, line.substring(0, 100));
+          }
+        }
+      }
+
+      const remaining = buffer.trim();
+      if (remaining) {
+        try {
+          const msg = JSON.parse(remaining);
+          if (msg.type === 'complete') {
+            finishWith(msg.summary);
+            showBanner('Evaluation complete!', 'info');
+            clearTimeout(safetyTimeout);
+            return;
+          }
+        } catch (e) {
+          console.error('Failed to parse final buffer:', e, remaining.substring(0, 100));
+        }
+      }
+
+      if (results.length > 0) {
+        finishWith(summaryFromResults());
+        showBanner('Evaluation complete!', 'info');
+      } else {
+        if (isFirstRun) el.progressOverlay.hidden = true; else clearInlineProgress();
+        state.evaluating = false;
+      }
+      clearTimeout(safetyTimeout);
+    } catch (err) {
+      if (isFirstRun) el.progressOverlay.hidden = true; else clearInlineProgress();
+      state.evaluating = false;
+      el.questionsList.innerHTML = `<div class="answer-placeholder" style="color:var(--danger)">Evaluation failed: ${err.message}</div>`;
+      clearTimeout(safetyTimeout);
+    }
+  }
+
+  async function runEvaluation() {
+    const project = currentProject();
+    if (!project || state.evaluating) return;
+    state.evaluating = true;
+
+    showWorkbenchTabs();
+    setActiveTab('eval');
+    el.questionsList.innerHTML = '<div class="answer-placeholder">Evaluating 5 bid-decision questions...</div>';
+
+    try {
+      const data = await api(`/projects/${project.id}/evaluate`, { method: 'POST' });
+      project.evaluation = data;
+      renderEvaluation();
+      showBanner('Evaluation complete!', 'info');
+    } catch (err) {
+      el.questionsList.innerHTML = `<div class="answer-placeholder" style="color:var(--danger)">Evaluation failed: ${err.message}</div>`;
+    } finally {
+      state.evaluating = false;
+    }
+  }
+
+  function renderEvaluation() {
+    const project = currentProject();
+    if (!project || !project.evaluation) return;
+    const data = project.evaluation;
+    updateScoreDashboard(data.summary);
+    el.questionsList.innerHTML = '';
+    data.questions.forEach((q, index) => {
+      const item = document.createElement('div');
+      item.className = 'question-item';
+      item.onclick = () => selectQuestion(q.id, q);
+      item.id = 'q-item-' + q.id;
+
+      const sentimentLabels = { positive: 'Positive', negative: 'Negative', neutral: 'Neutral', insufficient: 'Insufficient' };
+      const sentimentClasses = { positive: 'sentiment-positive', negative: 'sentiment-negative', neutral: 'sentiment-neutral', insufficient: 'sentiment-insufficient' };
+
+      item.innerHTML = `
+        <div class="question-number">${index + 1}</div>
+        <div class="question-text">
+          <div class="question-category">${q.category}</div>
+          ${q.question}
+        </div>
+        <div class="sentiment-badge ${sentimentClasses[q.sentiment]}">
+          ${sentimentLabels[q.sentiment]}
+        </div>
+      `;
+
+      el.questionsList.appendChild(item);
+    });
+
+    if (data.questions.length > 0) {
+      selectQuestion(data.questions[0].id, data.questions[0]);
+    }
+  }
+
+  function renderEvaluationResult(q) {
+    const sentimentLabels = { positive: 'Positive', negative: 'Negative', neutral: 'Neutral', insufficient: 'Insufficient' };
+    const sentimentClasses = { positive: 'sentiment-positive', negative: 'sentiment-negative', neutral: 'sentiment-neutral', insufficient: 'sentiment-insufficient' };
+
+    const item = document.createElement('div');
+    item.className = 'question-item';
+    item.onclick = () => selectQuestion(q.id, q);
+    item.id = 'q-item-' + q.id;
+
+    item.innerHTML = `
+      <div class="question-number">${el.questionsList.children.length + 1}</div>
+      <div class="question-text">
+        <div class="question-category">${q.category}</div>
+        ${q.question}
+      </div>
+      <div class="sentiment-badge ${sentimentClasses[q.sentiment]}">
+        ${sentimentLabels[q.sentiment]}
+      </div>
+    `;
+
+    el.questionsList.appendChild(item);
+  }
+
+  function updateScoreDashboard(summary) {
+    el.recommendation.textContent = summary.recommendation;
+    el.recommendation.className = 'recommendation-text ' + summary.color;
+    el.scoreHero.className = 'score-hero color-' + summary.color;
+    el.scoreHeroScore.textContent = summary.score || '';
+    el.positiveCount.textContent = summary.positive;
+    el.negativeCount.textContent = summary.negative;
+    el.neutralCount.textContent = summary.neutral;
+    el.insufficientCount.textContent = summary.insufficient;
+  }
+
+  // ---------- Lightweight Markdown renderer ----------
+  // Handles: headings (#, ##, ###), **bold**, *italic*, `code`,
+  // unordered (-) and ordered (1.) lists, blockquotes (>), hr (---),
+  // citation refs like [E1], and paragraphs.
+  function escapeHtml(s) {
+    return s.replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+
+  function renderInline(text) {
+    // Escape first, then apply inline transforms.
+    let html = escapeHtml(text);
+    // Inline code
+    html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+    // Bold then italic
+    html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    html = html.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
+    // Citation refs like [E1], [E12]
+    html = html.replace(/\[(E\d+)\]/g, '<span class="cite-ref">[$1]</span>');
+    return html;
+  }
+
+  function renderMarkdown(raw) {
+    if (!raw) return '';
+    const lines = String(raw).replace(/\r\n/g, '\n').split('\n');
+    const out = [];
+    let i = 0;
+
+    const flushList = (list) => {
+      if (!list || !list.items.length) return;
+      out.push('<' + list.tag + '>');
+      for (const it of list.items) {
+        out.push('<li>' + renderInline(it) + '</li>');
+      }
+      out.push('</' + list.tag + '>');
+    };
+
+    let list = null;
+    let para = [];
+
+    const flushPara = () => {
+      if (para.length) {
+        out.push('<p>' + renderInline(para.join(' ')) + '</p>');
+        para = [];
+      }
+    };
+    const flushAll = () => { flushPara(); flushList(list); list = null; };
+
+    while (i < lines.length) {
+      const line = lines[i];
+      const trimmed = line.trim();
+
+      // Blank line
+      if (!trimmed) { flushAll(); i++; continue; }
+
+      // Horizontal rule
+      if (/^-{3,}\s*$/.test(trimmed)) { flushAll(); out.push('<hr/>'); i++; continue; }
+
+      // Headings
+      const h = /^(#{1,3})\s+(.+)$/.exec(trimmed);
+      if (h) {
+        flushAll();
+        const level = h[1].length;
+        out.push('<h' + level + '>' + renderInline(h[2]) + '</h' + level + '>');
+        i++;
+        continue;
+      }
+
+      // Blockquote (collect contiguous lines)
+      if (/^>\s?/.test(trimmed)) {
+        flushAll();
+        const bq = [];
+        while (i < lines.length && /^>\s?/.test(lines[i].trim())) {
+          bq.push(lines[i].trim().replace(/^>\s?/, ''));
+          i++;
+        }
+        out.push('<blockquote>' + renderInline(bq.join(' ')) + '</blockquote>');
+        continue;
+      }
+
+      // Unordered list
+      const ul = /^[-*]\s+(.+)$/.exec(trimmed);
+      if (ul) {
+        flushPara();
+        if (!list || list.tag !== 'ul') { flushList(list); list = { tag: 'ul', items: [] }; }
+        list.items.push(ul[1]);
+        i++;
+        continue;
+      }
+
+      // Ordered list
+      const ol = /^\d+\.\s+(.+)$/.exec(trimmed);
+      if (ol) {
+        flushPara();
+        if (!list || list.tag !== 'ol') { flushList(list); list = { tag: 'ol', items: [] }; }
+        list.items.push(ol[1]);
+        i++;
+        continue;
+      }
+
+      // Regular text → accumulate paragraph (or list item if currently in a list)
+      if (list) {
+        // Continuation line inside a list item
+        const lastIdx = list.items.length - 1;
+        list.items[lastIdx] = list.items[lastIdx] + ' ' + trimmed;
+      } else {
+        para.push(trimmed);
+      }
+      i++;
+    }
+    flushAll();
+    return out.join('\n');
+  }
+
+  function selectQuestion(id, questionData) {
+    document.querySelectorAll('.question-item').forEach(el => el.classList.remove('active'));
+    const activeItem = document.getElementById('q-item-' + id);
+    if (activeItem) activeItem.classList.add('active');
+
+    const sentimentLabels = { positive: 'Positive', negative: 'Negative', neutral: 'Neutral', insufficient: 'Insufficient Evidence' };
+    const sentimentClasses = { positive: 'sentiment-positive', negative: 'sentiment-negative', neutral: 'sentiment-neutral', insufficient: 'sentiment-insufficient' };
+
+    const citationsHtml = questionData.citations && questionData.citations.length > 0
+      ? `<div class="citations"><div class="citations-title">Sources</div>${questionData.citations.map((c, i) => `<div class="citation"><span class="cite-ref">[E${i + 1}]</span> <span class="citation-file">${c.filename}</span><span class="citation-meta">Page ${c.page || 'N/A'} · Chunk ${c.chunk_id}</span></div>`).join('')}</div>`
+      : '';
+
+    // If the LLM prepended a heading that duplicates the category/question, drop it.
+    let raw = (questionData.answer || '').trim();
+    const firstLine = raw.split('\n', 1)[0].trim();
+    const cat = (questionData.category || '').toLowerCase();
+    const qnorm = (questionData.question || '').toLowerCase().replace(/[^a-z0-9 ]/g, '').slice(0, 60);
+    const fnorm = firstLine.replace(/^#+\s*/, '').toLowerCase().replace(/[^a-z0-9 ]/g, '');
+    if (/^#+\s/.test(firstLine) && (fnorm.includes(cat) || (qnorm && fnorm.includes(qnorm.split(' ').slice(0, 4).join(' '))))) {
+      raw = raw.split('\n').slice(1).join('\n').trim();
+    }
+
+    el.answerPanel.innerHTML = `
+      <div class="answer-header">
+        <span class="answer-category">${questionData.category}</span>
+        <span class="sentiment-badge ${sentimentClasses[questionData.sentiment]}">${sentimentLabels[questionData.sentiment]}</span>
+      </div>
+      <div class="answer-question">${questionData.question}</div>
+      <div class="answer-text">${renderMarkdown(raw)}</div>
+      ${citationsHtml}
+    `;
+  }
+
+  // ---------- Ask ----------
+
+  el.askBtn.addEventListener('click', async () => {
+    const project = currentProject();
+    const question = el.questionInput.value.trim();
+    if (!project || !question) return;
+
+    project.messages.push({ role: 'q', text: question });
+    el.questionInput.value = '';
+    el.askBtn.disabled = true;
+    renderChatMessages();
+
+    try {
+      const result = await api(`/projects/${project.id}/ask`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question }),
+      });
+      project.messages.push({ role: 'a', answer: result.answer, citations: result.citations || [] });
+    } catch (err) {
+      project.messages.push({ role: 'a', answer: null, error: err.message });
+    }
+    if (state.activeTab !== 'chat') {
+      state.unreadChat += 1;
+      updateChatBadge();
+    }
+    el.askBtn.disabled = false;
+    renderChatMessages();
+  });
+
+  function renderChatMessages() {
+    const project = currentProject();
+    if (!project) return;
+    el.chatMessages.innerHTML = '';
+
+    if (project.messages.length === 0) {
+      el.chatMessages.innerHTML = '<div class="message system">Ask any question about this project\'s documents. The system will search the uploaded documents and provide a cited answer.</div>';
+    }
+
+    for (const m of project.messages) {
+      if (m.role === 'q') {
+        const div = document.createElement('div');
+        div.className = 'message user';
+        div.textContent = m.text;
+        el.chatMessages.appendChild(div);
+      } else {
+        const div = document.createElement('div');
+        div.className = 'message assistant';
+        if (m.error) {
+          div.style.background = 'var(--danger-dim)';
+          div.style.color = 'var(--danger)';
+          div.textContent = 'Error: ' + m.error;
+        } else {
+          div.innerHTML = renderMarkdown(m.answer);
+        }
+        el.chatMessages.appendChild(div);
+      }
+    }
+    el.chatMessages.scrollTop = el.chatMessages.scrollHeight;
+  }
+
+})();
+</script>
+</body>
+</html>

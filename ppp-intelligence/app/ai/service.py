@@ -1,3 +1,5 @@
+import logging
+
 from sqlalchemy.orm import Session
 
 import httpx
@@ -5,6 +7,8 @@ import httpx
 from app.ai.prompts import QUESTION_PROMPT, SYSTEM_PROMPT
 from app.config import get_settings
 from app.retrieval.service import search_evidence
+
+logger = logging.getLogger(__name__)
 
 
 def _build_evidence_context(results: list[dict]) -> str:
@@ -70,6 +74,8 @@ def ask_project(
         },
     ]
 
+    logger.info(f"LLM_CALL_START model={settings.openrouter_model} question_len={len(question)}")
+
     with httpx.Client(timeout=120.0) as client:
         response = client.post(
             settings.openrouter_base_url + "/chat/completions",
@@ -83,6 +89,8 @@ def ask_project(
                 "temperature": 0,
             },
         )
+
+    logger.info(f"LLM_CALL_DONE status={response.status_code}")
 
     response.raise_for_status()
     payload = response.json()

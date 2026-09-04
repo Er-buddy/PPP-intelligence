@@ -1,14 +1,19 @@
 from pathlib import Path
 from uuid import uuid4
 
+import logging
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from fastapi.responses import HTMLResponse, StreamingResponse
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from app.ai.service import ask_project
+from app.api.evaluate import run_evaluation, stream_evaluation
 from app.db import get_db
 from app.documents.service import ingest_document
 from app.projects.models import Project
+
+logger = logging.getLogger(__name__)
 
 
 router = APIRouter()
@@ -104,4 +109,51 @@ def ask(
     except ValueError as exc:
         raise HTTPException(404, str(exc)) from exc
     except RuntimeError as exc:
+        raise HTTPException(500, str(exc)) from exc
+
+
+@router.get("/dashboard", response_class=HTMLResponse)
+def dashboard() -> HTMLResponse:
+    import pathlib
+
+    html_path = pathlib.Path(__file__).resolve().parent.parent / "templates" / "dashboard.html"
+    return HTMLResponse(content=html_path.read_text(encoding="utf-8"))
+
+
+@router.get("/", response_class=HTMLResponse)
+def root_dashboard() -> HTMLResponse:
+    import pathlib
+
+    html_path = pathlib.Path(__file__).resolve().parent.parent / "templates" / "Homepage.html"
+    return HTMLResponse(content=html_path.read_text(encoding="utf-8"))
+
+
+@router.post("/projects/{project_id}/evaluate")
+def evaluate(
+    project_id: str,
+    db: Session = Depends(get_db),
+):
+    try:
+        return run_evaluation(db=db, project_id=project_id)
+    except ValueError as exc:
+        raise HTTPException(404, str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(500, str(exc)) from exc
+
+
+@router.post("/projects/{project_id}/evaluate/stream")
+def evaluate_stream(
+    project_id: str,
+    db: Session = Depends(get_db),
+):
+    logger.info(f"STREAM_ENDPOINT_CALLED project_id={project_id}")
+    try:
+        response = stream_evaluation(db=db, project_id=project_id)
+        logger.info(f"STREAM_ENDPOINT_RETURNING project_id={project_id}")
+        return response
+    except ValueError as exc:
+        logger.error(f"STREAM_ENDPOINT_404 project_id={project_id} error={exc}")
+        raise HTTPException(404, str(exc)) from exc
+    except RuntimeError as exc:
+        logger.error(f"STREAM_ENDPOINT_500 project_id={project_id} error={exc}")
         raise HTTPException(500, str(exc)) from exc

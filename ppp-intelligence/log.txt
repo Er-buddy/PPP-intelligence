@@ -1,0 +1,524 @@
+2026-09-05 03:44:10,333 - INFO - httpx2 - HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-09-05 03:48:26,481 - INFO - httpx2 - HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-09-05 03:54:28,073 - INFO - httpx2 - HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-09-05 03:57:41,965 - INFO - httpx2 - HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-09-05 03:57:57,192 - INFO - httpx2 - HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-09-05 04:00:39,997 - INFO - httpx2 - HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-09-05 04:03:36,388 - INFO - app.api.routes - STREAM_ENDPOINT_CALLED project_id=fe6b6951-a3e1-4b1d-9a31-77e1aef62974
+2026-09-05 04:03:36,388 - INFO - app.api.routes - STREAM_ENDPOINT_RETURNING project_id=fe6b6951-a3e1-4b1d-9a31-77e1aef62974
+2026-09-05 04:03:36,389 - INFO - app.api.evaluate - [fe6b6951-a3e1-4b1d-9a31-77e1aef62974] EVALUATION_START total=5
+2026-09-05 04:03:36,389 - INFO - app.api.evaluate - [fe6b6951-a3e1-4b1d-9a31-77e1aef62974] START question=q1 category=Economics
+2026-09-05 04:03:36,389 - INFO - app.api.evaluate - [fe6b6951-a3e1-4b1d-9a31-77e1aef62974] START question=q2 category=Cashflow
+2026-09-05 04:03:36,389 - INFO - app.api.evaluate - [fe6b6951-a3e1-4b1d-9a31-77e1aef62974] START question=q3 category=Fatal Flaws
+2026-09-05 04:03:36,389 - INFO - app.api.evaluate - [fe6b6951-a3e1-4b1d-9a31-77e1aef62974] START question=q4 category=Capital
+2026-09-05 04:03:36,390 - INFO - app.api.evaluate - [fe6b6951-a3e1-4b1d-9a31-77e1aef62974] START question=q5 category=Win
+2026-09-05 04:03:36,390 - INFO - app.api.evaluate - [fe6b6951-a3e1-4b1d-9a31-77e1aef62974] SUBMITTED futures=5
+2026-09-05 04:03:36,431 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=166
+2026-09-05 04:03:36,431 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=165
+2026-09-05 04:03:36,432 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=169
+2026-09-05 04:03:36,432 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=146
+2026-09-05 04:03:36,432 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=145
+2026-09-05 04:03:38,152 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:03:38,763 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:03:39,893 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:03:41,053 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:03:41,559 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:03:43,135 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:03:43,136 - INFO - app.api.evaluate - [fe6b6951-a3e1-4b1d-9a31-77e1aef62974] DONE question=q1 answer_len=955
+2026-09-05 04:03:43,137 - INFO - app.api.evaluate - [fe6b6951-a3e1-4b1d-9a31-77e1aef62974] COMPLETED 1/5 question=q1 sentiment=insufficient
+2026-09-05 04:03:44,546 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:03:44,547 - INFO - app.api.evaluate - [fe6b6951-a3e1-4b1d-9a31-77e1aef62974] DONE question=q5 answer_len=3134
+2026-09-05 04:03:44,547 - INFO - app.api.evaluate - [fe6b6951-a3e1-4b1d-9a31-77e1aef62974] COMPLETED 2/5 question=q5 sentiment=insufficient
+2026-09-05 04:03:48,981 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:03:48,982 - INFO - app.api.evaluate - [fe6b6951-a3e1-4b1d-9a31-77e1aef62974] DONE question=q4 answer_len=1331
+2026-09-05 04:03:48,982 - INFO - app.api.evaluate - [fe6b6951-a3e1-4b1d-9a31-77e1aef62974] COMPLETED 3/5 question=q4 sentiment=insufficient
+2026-09-05 04:03:49,041 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:03:49,041 - INFO - app.api.evaluate - [fe6b6951-a3e1-4b1d-9a31-77e1aef62974] DONE question=q2 answer_len=1595
+2026-09-05 04:03:49,041 - INFO - app.api.evaluate - [fe6b6951-a3e1-4b1d-9a31-77e1aef62974] COMPLETED 4/5 question=q2 sentiment=negative
+2026-09-05 04:03:51,567 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:03:51,568 - INFO - app.api.evaluate - [fe6b6951-a3e1-4b1d-9a31-77e1aef62974] DONE question=q3 answer_len=2003
+2026-09-05 04:03:51,568 - INFO - app.api.evaluate - [fe6b6951-a3e1-4b1d-9a31-77e1aef62974] COMPLETED 5/5 question=q3 sentiment=insufficient
+2026-09-05 04:03:51,569 - INFO - app.api.evaluate - [fe6b6951-a3e1-4b1d-9a31-77e1aef62974] ALL_COMPLETED results=5
+2026-09-05 04:03:51,569 - INFO - app.api.evaluate - [fe6b6951-a3e1-4b1d-9a31-77e1aef62974] SUMMARY recommendation=NO-BID positive=0 negative=1 neutral=0 insufficient=4
+2026-09-05 04:07:57,575 - INFO - app.api.routes - STREAM_ENDPOINT_CALLED project_id=c4693d81-aa5f-428a-ab81-2334de58f18b
+2026-09-05 04:07:57,575 - INFO - app.api.routes - STREAM_ENDPOINT_RETURNING project_id=c4693d81-aa5f-428a-ab81-2334de58f18b
+2026-09-05 04:07:57,576 - INFO - app.api.evaluate - [c4693d81-aa5f-428a-ab81-2334de58f18b] EVALUATION_START total=5
+2026-09-05 04:07:57,576 - INFO - app.api.evaluate - [c4693d81-aa5f-428a-ab81-2334de58f18b] START question=q1 category=Economics
+2026-09-05 04:07:57,576 - INFO - app.api.evaluate - [c4693d81-aa5f-428a-ab81-2334de58f18b] START question=q2 category=Cashflow
+2026-09-05 04:07:57,576 - INFO - app.api.evaluate - [c4693d81-aa5f-428a-ab81-2334de58f18b] START question=q3 category=Fatal Flaws
+2026-09-05 04:07:57,577 - INFO - app.api.evaluate - [c4693d81-aa5f-428a-ab81-2334de58f18b] START question=q4 category=Capital
+2026-09-05 04:07:57,577 - INFO - app.api.evaluate - [c4693d81-aa5f-428a-ab81-2334de58f18b] START question=q5 category=Win
+2026-09-05 04:07:57,577 - INFO - app.api.evaluate - [c4693d81-aa5f-428a-ab81-2334de58f18b] SUBMITTED futures=5
+2026-09-05 04:07:57,623 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=165
+2026-09-05 04:07:57,623 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=146
+2026-09-05 04:07:57,623 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=145
+2026-09-05 04:07:57,624 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=166
+2026-09-05 04:07:57,624 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=169
+2026-09-05 04:07:58,692 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2026-09-05 04:07:58,692 - INFO - app.ai.service - LLM_CALL_DONE status=429
+2026-09-05 04:07:58,693 - ERROR - app.api.evaluate - [c4693d81-aa5f-428a-ab81-2334de58f18b] ERROR question=q5 error=Client error '429 Too Many Requests' for url 'https://openrouter.ai/api/v1/chat/completions'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429
+Traceback (most recent call last):
+  File "/Users/user/PPP-intelligence/ppp-intelligence/app/api/evaluate.py", line 203, in _process_question
+    answer = ask_project(
+  File "/Users/user/PPP-intelligence/ppp-intelligence/app/ai/service.py", line 95, in ask_project
+    response.raise_for_status()
+  File "/Users/user/PPP-intelligence/ppp-intelligence/.venv/lib/python3.10/site-packages/httpx/_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '429 Too Many Requests' for url 'https://openrouter.ai/api/v1/chat/completions'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429
+2026-09-05 04:07:58,695 - INFO - app.api.evaluate - [c4693d81-aa5f-428a-ab81-2334de58f18b] COMPLETED 1/5 question=q5 sentiment=neutral
+2026-09-05 04:07:59,270 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:08:00,805 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:08:01,693 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2026-09-05 04:08:01,694 - INFO - app.ai.service - LLM_CALL_DONE status=429
+2026-09-05 04:08:01,694 - ERROR - app.api.evaluate - [c4693d81-aa5f-428a-ab81-2334de58f18b] ERROR question=q3 error=Client error '429 Too Many Requests' for url 'https://openrouter.ai/api/v1/chat/completions'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429
+Traceback (most recent call last):
+  File "/Users/user/PPP-intelligence/ppp-intelligence/app/api/evaluate.py", line 203, in _process_question
+    answer = ask_project(
+  File "/Users/user/PPP-intelligence/ppp-intelligence/app/ai/service.py", line 95, in ask_project
+    response.raise_for_status()
+  File "/Users/user/PPP-intelligence/ppp-intelligence/.venv/lib/python3.10/site-packages/httpx/_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '429 Too Many Requests' for url 'https://openrouter.ai/api/v1/chat/completions'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429
+2026-09-05 04:08:01,695 - INFO - app.api.evaluate - [c4693d81-aa5f-428a-ab81-2334de58f18b] COMPLETED 2/5 question=q3 sentiment=neutral
+2026-09-05 04:08:01,902 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:08:07,168 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:08:07,168 - INFO - app.api.evaluate - [c4693d81-aa5f-428a-ab81-2334de58f18b] DONE question=q2 answer_len=3715
+2026-09-05 04:08:07,169 - INFO - app.api.evaluate - [c4693d81-aa5f-428a-ab81-2334de58f18b] COMPLETED 3/5 question=q2 sentiment=neutral
+2026-09-05 04:08:08,419 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:08:08,420 - INFO - app.api.evaluate - [c4693d81-aa5f-428a-ab81-2334de58f18b] DONE question=q1 answer_len=1423
+2026-09-05 04:08:08,420 - INFO - app.api.evaluate - [c4693d81-aa5f-428a-ab81-2334de58f18b] COMPLETED 4/5 question=q1 sentiment=insufficient
+2026-09-05 04:08:13,192 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:08:13,192 - INFO - app.api.evaluate - [c4693d81-aa5f-428a-ab81-2334de58f18b] DONE question=q4 answer_len=2000
+2026-09-05 04:08:13,193 - INFO - app.api.evaluate - [c4693d81-aa5f-428a-ab81-2334de58f18b] COMPLETED 5/5 question=q4 sentiment=insufficient
+2026-09-05 04:08:13,195 - INFO - app.api.evaluate - [c4693d81-aa5f-428a-ab81-2334de58f18b] ALL_COMPLETED results=5
+2026-09-05 04:08:13,195 - INFO - app.api.evaluate - [c4693d81-aa5f-428a-ab81-2334de58f18b] SUMMARY recommendation=NO-BID positive=0 negative=0 neutral=3 insufficient=2
+2026-09-05 04:08:46,410 - INFO - app.api.routes - STREAM_ENDPOINT_CALLED project_id=fd6dfd5a-2cbc-4325-bc71-cd11d6b63235
+2026-09-05 04:08:46,410 - INFO - app.api.routes - STREAM_ENDPOINT_RETURNING project_id=fd6dfd5a-2cbc-4325-bc71-cd11d6b63235
+2026-09-05 04:08:46,410 - INFO - app.api.evaluate - [fd6dfd5a-2cbc-4325-bc71-cd11d6b63235] EVALUATION_START total=5
+2026-09-05 04:08:46,410 - INFO - app.api.evaluate - [fd6dfd5a-2cbc-4325-bc71-cd11d6b63235] START question=q1 category=Economics
+2026-09-05 04:08:46,410 - INFO - app.api.evaluate - [fd6dfd5a-2cbc-4325-bc71-cd11d6b63235] START question=q2 category=Cashflow
+2026-09-05 04:08:46,410 - INFO - app.api.evaluate - [fd6dfd5a-2cbc-4325-bc71-cd11d6b63235] START question=q3 category=Fatal Flaws
+2026-09-05 04:08:46,411 - INFO - app.api.evaluate - [fd6dfd5a-2cbc-4325-bc71-cd11d6b63235] START question=q4 category=Capital
+2026-09-05 04:08:46,411 - INFO - app.api.evaluate - [fd6dfd5a-2cbc-4325-bc71-cd11d6b63235] START question=q5 category=Win
+2026-09-05 04:08:46,411 - INFO - app.api.evaluate - [fd6dfd5a-2cbc-4325-bc71-cd11d6b63235] SUBMITTED futures=5
+2026-09-05 04:08:46,469 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=145
+2026-09-05 04:08:46,469 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=165
+2026-09-05 04:08:46,469 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=166
+2026-09-05 04:08:46,470 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=169
+2026-09-05 04:08:46,470 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=146
+2026-09-05 04:08:46,532 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2026-09-05 04:08:46,532 - INFO - app.ai.service - LLM_CALL_DONE status=429
+2026-09-05 04:08:46,532 - ERROR - app.api.evaluate - [fd6dfd5a-2cbc-4325-bc71-cd11d6b63235] ERROR question=q5 error=Client error '429 Too Many Requests' for url 'https://openrouter.ai/api/v1/chat/completions'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429
+Traceback (most recent call last):
+  File "/Users/user/PPP-intelligence/ppp-intelligence/app/api/evaluate.py", line 203, in _process_question
+    answer = ask_project(
+  File "/Users/user/PPP-intelligence/ppp-intelligence/app/ai/service.py", line 95, in ask_project
+    response.raise_for_status()
+  File "/Users/user/PPP-intelligence/ppp-intelligence/.venv/lib/python3.10/site-packages/httpx/_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '429 Too Many Requests' for url 'https://openrouter.ai/api/v1/chat/completions'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429
+2026-09-05 04:08:46,532 - INFO - app.api.evaluate - [fd6dfd5a-2cbc-4325-bc71-cd11d6b63235] COMPLETED 1/5 question=q5 sentiment=neutral
+2026-09-05 04:08:47,797 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:08:48,546 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2026-09-05 04:08:48,547 - INFO - app.ai.service - LLM_CALL_DONE status=429
+2026-09-05 04:08:48,548 - ERROR - app.api.evaluate - [fd6dfd5a-2cbc-4325-bc71-cd11d6b63235] ERROR question=q1 error=Client error '429 Too Many Requests' for url 'https://openrouter.ai/api/v1/chat/completions'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429
+Traceback (most recent call last):
+  File "/Users/user/PPP-intelligence/ppp-intelligence/app/api/evaluate.py", line 203, in _process_question
+    answer = ask_project(
+  File "/Users/user/PPP-intelligence/ppp-intelligence/app/ai/service.py", line 95, in ask_project
+    response.raise_for_status()
+  File "/Users/user/PPP-intelligence/ppp-intelligence/.venv/lib/python3.10/site-packages/httpx/_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '429 Too Many Requests' for url 'https://openrouter.ai/api/v1/chat/completions'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429
+2026-09-05 04:08:48,549 - INFO - app.api.evaluate - [fd6dfd5a-2cbc-4325-bc71-cd11d6b63235] COMPLETED 2/5 question=q1 sentiment=neutral
+2026-09-05 04:08:49,543 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2026-09-05 04:08:49,544 - INFO - app.ai.service - LLM_CALL_DONE status=429
+2026-09-05 04:08:49,544 - ERROR - app.api.evaluate - [fd6dfd5a-2cbc-4325-bc71-cd11d6b63235] ERROR question=q4 error=Client error '429 Too Many Requests' for url 'https://openrouter.ai/api/v1/chat/completions'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429
+Traceback (most recent call last):
+  File "/Users/user/PPP-intelligence/ppp-intelligence/app/api/evaluate.py", line 203, in _process_question
+    answer = ask_project(
+  File "/Users/user/PPP-intelligence/ppp-intelligence/app/ai/service.py", line 95, in ask_project
+    response.raise_for_status()
+  File "/Users/user/PPP-intelligence/ppp-intelligence/.venv/lib/python3.10/site-packages/httpx/_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '429 Too Many Requests' for url 'https://openrouter.ai/api/v1/chat/completions'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429
+2026-09-05 04:08:49,544 - INFO - app.api.evaluate - [fd6dfd5a-2cbc-4325-bc71-cd11d6b63235] COMPLETED 3/5 question=q4 sentiment=neutral
+2026-09-05 04:08:51,681 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:08:54,354 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:08:54,355 - INFO - app.api.evaluate - [fd6dfd5a-2cbc-4325-bc71-cd11d6b63235] DONE question=q3 answer_len=3567
+2026-09-05 04:08:54,356 - INFO - app.api.evaluate - [fd6dfd5a-2cbc-4325-bc71-cd11d6b63235] COMPLETED 4/5 question=q3 sentiment=insufficient
+2026-09-05 04:08:59,282 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:08:59,283 - INFO - app.api.evaluate - [fd6dfd5a-2cbc-4325-bc71-cd11d6b63235] DONE question=q2 answer_len=4150
+2026-09-05 04:08:59,284 - INFO - app.api.evaluate - [fd6dfd5a-2cbc-4325-bc71-cd11d6b63235] COMPLETED 5/5 question=q2 sentiment=insufficient
+2026-09-05 04:08:59,286 - INFO - app.api.evaluate - [fd6dfd5a-2cbc-4325-bc71-cd11d6b63235] ALL_COMPLETED results=5
+2026-09-05 04:08:59,287 - INFO - app.api.evaluate - [fd6dfd5a-2cbc-4325-bc71-cd11d6b63235] SUMMARY recommendation=NO-BID positive=0 negative=0 neutral=3 insufficient=2
+2026-09-05 04:14:24,723 - INFO - app.api.routes - STREAM_ENDPOINT_CALLED project_id=d9e67fe7-4a56-434d-83f5-145337355a44
+2026-09-05 04:14:24,723 - INFO - app.api.routes - STREAM_ENDPOINT_RETURNING project_id=d9e67fe7-4a56-434d-83f5-145337355a44
+2026-09-05 04:14:24,724 - INFO - app.api.evaluate - [d9e67fe7-4a56-434d-83f5-145337355a44] EVALUATION_START total=5
+2026-09-05 04:14:24,724 - INFO - app.api.evaluate - [d9e67fe7-4a56-434d-83f5-145337355a44] START question=q1 category=Economics
+2026-09-05 04:14:24,724 - INFO - app.api.evaluate - [d9e67fe7-4a56-434d-83f5-145337355a44] START question=q2 category=Cashflow
+2026-09-05 04:14:24,724 - INFO - app.api.evaluate - [d9e67fe7-4a56-434d-83f5-145337355a44] START question=q3 category=Fatal Flaws
+2026-09-05 04:14:24,724 - INFO - app.api.evaluate - [d9e67fe7-4a56-434d-83f5-145337355a44] START question=q4 category=Capital
+2026-09-05 04:14:24,725 - INFO - app.api.evaluate - [d9e67fe7-4a56-434d-83f5-145337355a44] START question=q5 category=Win
+2026-09-05 04:14:24,725 - INFO - app.api.evaluate - [d9e67fe7-4a56-434d-83f5-145337355a44] SUBMITTED futures=5
+2026-09-05 04:14:24,849 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=165
+2026-09-05 04:14:24,849 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=166
+2026-09-05 04:14:24,849 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=145
+2026-09-05 04:14:24,850 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=169
+2026-09-05 04:14:24,850 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=146
+2026-09-05 04:14:26,436 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:14:28,278 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:14:28,281 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:14:29,437 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:14:30,308 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:14:35,430 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:14:35,430 - INFO - app.api.evaluate - [d9e67fe7-4a56-434d-83f5-145337355a44] DONE question=q1 answer_len=1042
+2026-09-05 04:14:35,431 - INFO - app.api.evaluate - [d9e67fe7-4a56-434d-83f5-145337355a44] COMPLETED 1/5 question=q1 sentiment=insufficient
+2026-09-05 04:14:37,285 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:14:37,286 - INFO - app.api.evaluate - [d9e67fe7-4a56-434d-83f5-145337355a44] DONE question=q4 answer_len=1580
+2026-09-05 04:14:37,287 - INFO - app.api.evaluate - [d9e67fe7-4a56-434d-83f5-145337355a44] COMPLETED 2/5 question=q4 sentiment=insufficient
+2026-09-05 04:14:38,689 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:14:38,689 - INFO - app.api.evaluate - [d9e67fe7-4a56-434d-83f5-145337355a44] DONE question=q2 answer_len=1312
+2026-09-05 04:14:38,690 - INFO - app.api.evaluate - [d9e67fe7-4a56-434d-83f5-145337355a44] COMPLETED 3/5 question=q2 sentiment=negative
+2026-09-05 04:14:40,673 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:14:40,673 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:14:40,673 - INFO - app.api.evaluate - [d9e67fe7-4a56-434d-83f5-145337355a44] DONE question=q5 answer_len=1247
+2026-09-05 04:14:40,674 - INFO - app.api.evaluate - [d9e67fe7-4a56-434d-83f5-145337355a44] DONE question=q3 answer_len=2001
+2026-09-05 04:14:40,674 - INFO - app.api.evaluate - [d9e67fe7-4a56-434d-83f5-145337355a44] COMPLETED 4/5 question=q5 sentiment=insufficient
+2026-09-05 04:14:40,676 - INFO - app.api.evaluate - [d9e67fe7-4a56-434d-83f5-145337355a44] COMPLETED 5/5 question=q3 sentiment=insufficient
+2026-09-05 04:14:40,677 - INFO - app.api.evaluate - [d9e67fe7-4a56-434d-83f5-145337355a44] ALL_COMPLETED results=5
+2026-09-05 04:14:40,677 - INFO - app.api.evaluate - [d9e67fe7-4a56-434d-83f5-145337355a44] SUMMARY recommendation=NO-BID positive=0 negative=1 neutral=0 insufficient=4
+2026-09-05 04:26:06,627 - INFO - app.api.routes - STREAM_ENDPOINT_CALLED project_id=a7bab0e3-7b29-4476-a713-22c48a0d7e09
+2026-09-05 04:26:06,627 - INFO - app.api.routes - STREAM_ENDPOINT_RETURNING project_id=a7bab0e3-7b29-4476-a713-22c48a0d7e09
+2026-09-05 04:26:06,628 - INFO - app.api.evaluate - [a7bab0e3-7b29-4476-a713-22c48a0d7e09] EVALUATION_START total=5
+2026-09-05 04:26:06,628 - INFO - app.api.evaluate - [a7bab0e3-7b29-4476-a713-22c48a0d7e09] START question=q1 category=Economics
+2026-09-05 04:26:06,628 - INFO - app.api.evaluate - [a7bab0e3-7b29-4476-a713-22c48a0d7e09] START question=q2 category=Cashflow
+2026-09-05 04:26:06,628 - INFO - app.api.evaluate - [a7bab0e3-7b29-4476-a713-22c48a0d7e09] START question=q3 category=Fatal Flaws
+2026-09-05 04:26:06,629 - INFO - app.api.evaluate - [a7bab0e3-7b29-4476-a713-22c48a0d7e09] START question=q4 category=Capital
+2026-09-05 04:26:06,632 - INFO - app.api.evaluate - [a7bab0e3-7b29-4476-a713-22c48a0d7e09] START question=q5 category=Win
+2026-09-05 04:26:06,632 - INFO - app.api.evaluate - [a7bab0e3-7b29-4476-a713-22c48a0d7e09] SUBMITTED futures=5
+2026-09-05 04:26:06,773 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=166
+2026-09-05 04:26:06,773 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=165
+2026-09-05 04:26:06,773 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=145
+2026-09-05 04:26:06,774 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=146
+2026-09-05 04:26:06,775 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=169
+2026-09-05 04:26:07,946 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2026-09-05 04:26:07,947 - INFO - app.ai.service - LLM_CALL_DONE status=429
+2026-09-05 04:26:07,947 - ERROR - app.api.evaluate - [a7bab0e3-7b29-4476-a713-22c48a0d7e09] ERROR question=q2 error=Client error '429 Too Many Requests' for url 'https://openrouter.ai/api/v1/chat/completions'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429
+Traceback (most recent call last):
+  File "/Users/user/PPP-intelligence/ppp-intelligence/app/api/evaluate.py", line 203, in _process_question
+    answer = ask_project(
+  File "/Users/user/PPP-intelligence/ppp-intelligence/app/ai/service.py", line 95, in ask_project
+    response.raise_for_status()
+  File "/Users/user/PPP-intelligence/ppp-intelligence/.venv/lib/python3.10/site-packages/httpx/_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '429 Too Many Requests' for url 'https://openrouter.ai/api/v1/chat/completions'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429
+2026-09-05 04:26:07,948 - INFO - app.api.evaluate - [a7bab0e3-7b29-4476-a713-22c48a0d7e09] COMPLETED 1/5 question=q2 sentiment=neutral
+2026-09-05 04:26:08,984 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:26:10,649 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:26:11,690 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:26:12,892 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:26:16,459 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:26:16,461 - INFO - app.api.evaluate - [a7bab0e3-7b29-4476-a713-22c48a0d7e09] DONE question=q4 answer_len=3883
+2026-09-05 04:26:16,470 - INFO - app.api.evaluate - [a7bab0e3-7b29-4476-a713-22c48a0d7e09] COMPLETED 2/5 question=q4 sentiment=insufficient
+2026-09-05 04:26:19,449 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:26:19,451 - INFO - app.api.evaluate - [a7bab0e3-7b29-4476-a713-22c48a0d7e09] DONE question=q1 answer_len=1630
+2026-09-05 04:26:19,452 - INFO - app.api.evaluate - [a7bab0e3-7b29-4476-a713-22c48a0d7e09] COMPLETED 3/5 question=q1 sentiment=insufficient
+2026-09-05 04:26:21,823 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:26:21,824 - INFO - app.api.evaluate - [a7bab0e3-7b29-4476-a713-22c48a0d7e09] DONE question=q5 answer_len=1969
+2026-09-05 04:26:21,824 - INFO - app.api.evaluate - [a7bab0e3-7b29-4476-a713-22c48a0d7e09] COMPLETED 4/5 question=q5 sentiment=insufficient
+2026-09-05 04:26:29,382 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:26:29,383 - INFO - app.api.evaluate - [a7bab0e3-7b29-4476-a713-22c48a0d7e09] DONE question=q3 answer_len=3538
+2026-09-05 04:26:29,384 - INFO - app.api.evaluate - [a7bab0e3-7b29-4476-a713-22c48a0d7e09] COMPLETED 5/5 question=q3 sentiment=positive
+2026-09-05 04:26:29,387 - INFO - app.api.evaluate - [a7bab0e3-7b29-4476-a713-22c48a0d7e09] ALL_COMPLETED results=5
+2026-09-05 04:26:29,387 - INFO - app.api.evaluate - [a7bab0e3-7b29-4476-a713-22c48a0d7e09] SUMMARY recommendation=NO-BID positive=1 negative=0 neutral=1 insufficient=3
+2026-09-05 04:27:04,712 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=133
+2026-09-05 04:27:04,788 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2026-09-05 04:27:04,788 - INFO - app.ai.service - LLM_CALL_DONE status=429
+2026-09-05 04:27:37,353 - INFO - app.api.routes - STREAM_ENDPOINT_CALLED project_id=7719c38c-7be8-40df-9708-9a8b3edf13af
+2026-09-05 04:27:37,353 - INFO - app.api.routes - STREAM_ENDPOINT_RETURNING project_id=7719c38c-7be8-40df-9708-9a8b3edf13af
+2026-09-05 04:27:37,353 - INFO - app.api.evaluate - [7719c38c-7be8-40df-9708-9a8b3edf13af] EVALUATION_START total=5
+2026-09-05 04:27:37,354 - INFO - app.api.evaluate - [7719c38c-7be8-40df-9708-9a8b3edf13af] START question=q1 category=Economics
+2026-09-05 04:27:37,354 - INFO - app.api.evaluate - [7719c38c-7be8-40df-9708-9a8b3edf13af] START question=q2 category=Cashflow
+2026-09-05 04:27:37,355 - INFO - app.api.evaluate - [7719c38c-7be8-40df-9708-9a8b3edf13af] START question=q3 category=Fatal Flaws
+2026-09-05 04:27:37,355 - INFO - app.api.evaluate - [7719c38c-7be8-40df-9708-9a8b3edf13af] START question=q4 category=Capital
+2026-09-05 04:27:37,356 - INFO - app.api.evaluate - [7719c38c-7be8-40df-9708-9a8b3edf13af] START question=q5 category=Win
+2026-09-05 04:27:37,356 - INFO - app.api.evaluate - [7719c38c-7be8-40df-9708-9a8b3edf13af] SUBMITTED futures=5
+2026-09-05 04:27:37,534 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=145
+2026-09-05 04:27:37,534 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=169
+2026-09-05 04:27:37,535 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=146
+2026-09-05 04:27:37,535 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=166
+2026-09-05 04:27:37,536 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=165
+2026-09-05 04:27:37,661 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2026-09-05 04:27:37,661 - INFO - app.ai.service - LLM_CALL_DONE status=429
+2026-09-05 04:27:37,661 - ERROR - app.api.evaluate - [7719c38c-7be8-40df-9708-9a8b3edf13af] ERROR question=q3 error=Client error '429 Too Many Requests' for url 'https://openrouter.ai/api/v1/chat/completions'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429
+Traceback (most recent call last):
+  File "/Users/user/PPP-intelligence/ppp-intelligence/app/api/evaluate.py", line 203, in _process_question
+    answer = ask_project(
+  File "/Users/user/PPP-intelligence/ppp-intelligence/app/ai/service.py", line 95, in ask_project
+    response.raise_for_status()
+  File "/Users/user/PPP-intelligence/ppp-intelligence/.venv/lib/python3.10/site-packages/httpx/_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '429 Too Many Requests' for url 'https://openrouter.ai/api/v1/chat/completions'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429
+2026-09-05 04:27:37,662 - INFO - app.api.evaluate - [7719c38c-7be8-40df-9708-9a8b3edf13af] COMPLETED 1/5 question=q3 sentiment=neutral
+2026-09-05 04:27:39,012 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:27:39,700 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:27:40,610 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2026-09-05 04:27:40,611 - INFO - app.ai.service - LLM_CALL_DONE status=429
+2026-09-05 04:27:40,611 - ERROR - app.api.evaluate - [7719c38c-7be8-40df-9708-9a8b3edf13af] ERROR question=q2 error=Client error '429 Too Many Requests' for url 'https://openrouter.ai/api/v1/chat/completions'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429
+Traceback (most recent call last):
+  File "/Users/user/PPP-intelligence/ppp-intelligence/app/api/evaluate.py", line 203, in _process_question
+    answer = ask_project(
+  File "/Users/user/PPP-intelligence/ppp-intelligence/app/ai/service.py", line 95, in ask_project
+    response.raise_for_status()
+  File "/Users/user/PPP-intelligence/ppp-intelligence/.venv/lib/python3.10/site-packages/httpx/_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '429 Too Many Requests' for url 'https://openrouter.ai/api/v1/chat/completions'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429
+2026-09-05 04:27:40,611 - INFO - app.api.evaluate - [7719c38c-7be8-40df-9708-9a8b3edf13af] COMPLETED 2/5 question=q2 sentiment=neutral
+2026-09-05 04:27:41,335 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:27:43,334 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:27:43,335 - INFO - app.api.evaluate - [7719c38c-7be8-40df-9708-9a8b3edf13af] DONE question=q1 answer_len=2218
+2026-09-05 04:27:43,336 - INFO - app.api.evaluate - [7719c38c-7be8-40df-9708-9a8b3edf13af] COMPLETED 3/5 question=q1 sentiment=insufficient
+2026-09-05 04:27:46,190 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:27:46,191 - INFO - app.api.evaluate - [7719c38c-7be8-40df-9708-9a8b3edf13af] DONE question=q5 answer_len=4387
+2026-09-05 04:27:46,191 - INFO - app.api.evaluate - [7719c38c-7be8-40df-9708-9a8b3edf13af] COMPLETED 4/5 question=q5 sentiment=insufficient
+2026-09-05 04:27:53,146 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:27:53,148 - INFO - app.api.evaluate - [7719c38c-7be8-40df-9708-9a8b3edf13af] DONE question=q4 answer_len=2020
+2026-09-05 04:27:53,151 - INFO - app.api.evaluate - [7719c38c-7be8-40df-9708-9a8b3edf13af] COMPLETED 5/5 question=q4 sentiment=insufficient
+2026-09-05 04:27:53,155 - INFO - app.api.evaluate - [7719c38c-7be8-40df-9708-9a8b3edf13af] ALL_COMPLETED results=5
+2026-09-05 04:27:53,156 - INFO - app.api.evaluate - [7719c38c-7be8-40df-9708-9a8b3edf13af] SUMMARY recommendation=NO-BID positive=0 negative=0 neutral=2 insufficient=3
+2026-09-05 04:28:34,630 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=138
+2026-09-05 04:28:36,108 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:28:51,511 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:41:15,416 - INFO - app.api.routes - STREAM_ENDPOINT_CALLED project_id=6b9370cf-5fea-45e1-b456-a15f5b47c8ea
+2026-09-05 04:41:15,416 - INFO - app.api.routes - STREAM_ENDPOINT_RETURNING project_id=6b9370cf-5fea-45e1-b456-a15f5b47c8ea
+2026-09-05 04:41:15,417 - INFO - app.api.evaluate - [6b9370cf-5fea-45e1-b456-a15f5b47c8ea] EVALUATION_START total=5
+2026-09-05 04:41:15,417 - INFO - app.api.evaluate - [6b9370cf-5fea-45e1-b456-a15f5b47c8ea] START question=q1 category=Economics
+2026-09-05 04:41:15,417 - INFO - app.api.evaluate - [6b9370cf-5fea-45e1-b456-a15f5b47c8ea] START question=q2 category=Cashflow
+2026-09-05 04:41:15,417 - INFO - app.api.evaluate - [6b9370cf-5fea-45e1-b456-a15f5b47c8ea] START question=q3 category=Fatal Flaws
+2026-09-05 04:41:15,418 - INFO - app.api.evaluate - [6b9370cf-5fea-45e1-b456-a15f5b47c8ea] START question=q4 category=Capital
+2026-09-05 04:41:15,418 - INFO - app.api.evaluate - [6b9370cf-5fea-45e1-b456-a15f5b47c8ea] START question=q5 category=Win
+2026-09-05 04:41:15,418 - INFO - app.api.evaluate - [6b9370cf-5fea-45e1-b456-a15f5b47c8ea] SUBMITTED futures=5
+2026-09-05 04:41:15,590 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=145
+2026-09-05 04:41:15,590 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=169
+2026-09-05 04:41:15,591 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=166
+2026-09-05 04:41:15,591 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=165
+2026-09-05 04:41:15,591 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=146
+2026-09-05 04:41:16,084 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2026-09-05 04:41:16,085 - INFO - app.ai.service - LLM_CALL_DONE status=429
+2026-09-05 04:41:16,085 - ERROR - app.api.evaluate - [6b9370cf-5fea-45e1-b456-a15f5b47c8ea] ERROR question=q4 error=Client error '429 Too Many Requests' for url 'https://openrouter.ai/api/v1/chat/completions'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429
+Traceback (most recent call last):
+  File "/Users/user/PPP-intelligence/ppp-intelligence/app/api/evaluate.py", line 203, in _process_question
+    answer = ask_project(
+  File "/Users/user/PPP-intelligence/ppp-intelligence/app/ai/service.py", line 95, in ask_project
+    response.raise_for_status()
+  File "/Users/user/PPP-intelligence/ppp-intelligence/.venv/lib/python3.10/site-packages/httpx/_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '429 Too Many Requests' for url 'https://openrouter.ai/api/v1/chat/completions'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429
+2026-09-05 04:41:16,086 - INFO - app.api.evaluate - [6b9370cf-5fea-45e1-b456-a15f5b47c8ea] COMPLETED 1/5 question=q4 sentiment=neutral
+2026-09-05 04:41:16,747 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2026-09-05 04:41:16,748 - INFO - app.ai.service - LLM_CALL_DONE status=429
+2026-09-05 04:41:16,748 - ERROR - app.api.evaluate - [6b9370cf-5fea-45e1-b456-a15f5b47c8ea] ERROR question=q3 error=Client error '429 Too Many Requests' for url 'https://openrouter.ai/api/v1/chat/completions'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429
+Traceback (most recent call last):
+  File "/Users/user/PPP-intelligence/ppp-intelligence/app/api/evaluate.py", line 203, in _process_question
+    answer = ask_project(
+  File "/Users/user/PPP-intelligence/ppp-intelligence/app/ai/service.py", line 95, in ask_project
+    response.raise_for_status()
+  File "/Users/user/PPP-intelligence/ppp-intelligence/.venv/lib/python3.10/site-packages/httpx/_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '429 Too Many Requests' for url 'https://openrouter.ai/api/v1/chat/completions'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429
+2026-09-05 04:41:16,748 - INFO - app.api.evaluate - [6b9370cf-5fea-45e1-b456-a15f5b47c8ea] COMPLETED 2/5 question=q3 sentiment=neutral
+2026-09-05 04:41:19,259 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:41:20,181 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:41:21,105 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:41:24,612 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:41:24,612 - INFO - app.api.evaluate - [6b9370cf-5fea-45e1-b456-a15f5b47c8ea] DONE question=q1 answer_len=2278
+2026-09-05 04:41:24,613 - INFO - app.api.evaluate - [6b9370cf-5fea-45e1-b456-a15f5b47c8ea] COMPLETED 3/5 question=q1 sentiment=insufficient
+2026-09-05 04:41:28,782 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:41:28,782 - INFO - app.api.evaluate - [6b9370cf-5fea-45e1-b456-a15f5b47c8ea] DONE question=q2 answer_len=1551
+2026-09-05 04:41:28,782 - INFO - app.api.evaluate - [6b9370cf-5fea-45e1-b456-a15f5b47c8ea] COMPLETED 4/5 question=q2 sentiment=positive
+2026-09-05 04:41:32,692 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:41:32,692 - INFO - app.api.evaluate - [6b9370cf-5fea-45e1-b456-a15f5b47c8ea] DONE question=q5 answer_len=1868
+2026-09-05 04:41:32,692 - INFO - app.api.evaluate - [6b9370cf-5fea-45e1-b456-a15f5b47c8ea] COMPLETED 5/5 question=q5 sentiment=insufficient
+2026-09-05 04:41:32,693 - INFO - app.api.evaluate - [6b9370cf-5fea-45e1-b456-a15f5b47c8ea] ALL_COMPLETED results=5
+2026-09-05 04:41:32,693 - INFO - app.api.evaluate - [6b9370cf-5fea-45e1-b456-a15f5b47c8ea] SUMMARY recommendation=NO-BID positive=1 negative=0 neutral=2 insufficient=2
+2026-09-05 04:42:10,868 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=146
+2026-09-05 04:42:12,201 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:42:18,754 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:54:51,724 - INFO - app.api.routes - STREAM_ENDPOINT_CALLED project_id=9cd16746-649d-4a67-a1f5-9ee1f0eed796
+2026-09-05 04:54:51,725 - INFO - app.api.routes - STREAM_ENDPOINT_RETURNING project_id=9cd16746-649d-4a67-a1f5-9ee1f0eed796
+2026-09-05 04:54:51,725 - INFO - app.api.evaluate - [9cd16746-649d-4a67-a1f5-9ee1f0eed796] EVALUATION_START total=5
+2026-09-05 04:54:51,726 - INFO - app.api.evaluate - [9cd16746-649d-4a67-a1f5-9ee1f0eed796] START question=q1 category=Economics
+2026-09-05 04:54:51,726 - INFO - app.api.evaluate - [9cd16746-649d-4a67-a1f5-9ee1f0eed796] START question=q2 category=Cashflow
+2026-09-05 04:54:51,726 - INFO - app.api.evaluate - [9cd16746-649d-4a67-a1f5-9ee1f0eed796] START question=q3 category=Fatal Flaws
+2026-09-05 04:54:51,726 - INFO - app.api.evaluate - [9cd16746-649d-4a67-a1f5-9ee1f0eed796] START question=q4 category=Capital
+2026-09-05 04:54:51,755 - INFO - app.api.evaluate - [9cd16746-649d-4a67-a1f5-9ee1f0eed796] START question=q5 category=Win
+2026-09-05 04:54:51,755 - INFO - app.api.evaluate - [9cd16746-649d-4a67-a1f5-9ee1f0eed796] SUBMITTED futures=5
+2026-09-05 04:54:51,863 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=166
+2026-09-05 04:54:51,864 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=146
+2026-09-05 04:54:51,865 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=169
+2026-09-05 04:54:51,865 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=145
+2026-09-05 04:54:51,865 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=165
+2026-09-05 04:54:53,862 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:54:54,007 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2026-09-05 04:54:54,008 - INFO - app.ai.service - LLM_CALL_DONE status=429
+2026-09-05 04:54:54,008 - ERROR - app.api.evaluate - [9cd16746-649d-4a67-a1f5-9ee1f0eed796] ERROR question=q4 error=Client error '429 Too Many Requests' for url 'https://openrouter.ai/api/v1/chat/completions'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429
+Traceback (most recent call last):
+  File "/Users/user/PPP-intelligence/ppp-intelligence/app/api/evaluate.py", line 203, in _process_question
+    answer = ask_project(
+  File "/Users/user/PPP-intelligence/ppp-intelligence/app/ai/service.py", line 95, in ask_project
+    response.raise_for_status()
+  File "/Users/user/PPP-intelligence/ppp-intelligence/.venv/lib/python3.10/site-packages/httpx/_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '429 Too Many Requests' for url 'https://openrouter.ai/api/v1/chat/completions'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429
+2026-09-05 04:54:54,008 - INFO - app.api.evaluate - [9cd16746-649d-4a67-a1f5-9ee1f0eed796] COMPLETED 1/5 question=q4 sentiment=neutral
+2026-09-05 04:54:54,178 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:54:55,734 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2026-09-05 04:54:55,734 - INFO - app.ai.service - LLM_CALL_DONE status=429
+2026-09-05 04:54:55,734 - ERROR - app.api.evaluate - [9cd16746-649d-4a67-a1f5-9ee1f0eed796] ERROR question=q3 error=Client error '429 Too Many Requests' for url 'https://openrouter.ai/api/v1/chat/completions'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429
+Traceback (most recent call last):
+  File "/Users/user/PPP-intelligence/ppp-intelligence/app/api/evaluate.py", line 203, in _process_question
+    answer = ask_project(
+  File "/Users/user/PPP-intelligence/ppp-intelligence/app/ai/service.py", line 95, in ask_project
+    response.raise_for_status()
+  File "/Users/user/PPP-intelligence/ppp-intelligence/.venv/lib/python3.10/site-packages/httpx/_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '429 Too Many Requests' for url 'https://openrouter.ai/api/v1/chat/completions'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429
+2026-09-05 04:54:55,734 - INFO - app.api.evaluate - [9cd16746-649d-4a67-a1f5-9ee1f0eed796] COMPLETED 2/5 question=q3 sentiment=neutral
+2026-09-05 04:54:56,013 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2026-09-05 04:54:56,013 - INFO - app.ai.service - LLM_CALL_DONE status=429
+2026-09-05 04:54:56,013 - ERROR - app.api.evaluate - [9cd16746-649d-4a67-a1f5-9ee1f0eed796] ERROR question=q2 error=Client error '429 Too Many Requests' for url 'https://openrouter.ai/api/v1/chat/completions'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429
+Traceback (most recent call last):
+  File "/Users/user/PPP-intelligence/ppp-intelligence/app/api/evaluate.py", line 203, in _process_question
+    answer = ask_project(
+  File "/Users/user/PPP-intelligence/ppp-intelligence/app/ai/service.py", line 95, in ask_project
+    response.raise_for_status()
+  File "/Users/user/PPP-intelligence/ppp-intelligence/.venv/lib/python3.10/site-packages/httpx/_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '429 Too Many Requests' for url 'https://openrouter.ai/api/v1/chat/completions'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429
+2026-09-05 04:54:56,014 - INFO - app.api.evaluate - [9cd16746-649d-4a67-a1f5-9ee1f0eed796] COMPLETED 3/5 question=q2 sentiment=neutral
+2026-09-05 04:55:00,803 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:55:00,804 - INFO - app.api.evaluate - [9cd16746-649d-4a67-a1f5-9ee1f0eed796] DONE question=q5 answer_len=4051
+2026-09-05 04:55:00,805 - INFO - app.api.evaluate - [9cd16746-649d-4a67-a1f5-9ee1f0eed796] COMPLETED 4/5 question=q5 sentiment=insufficient
+2026-09-05 04:55:05,230 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:55:05,231 - INFO - app.api.evaluate - [9cd16746-649d-4a67-a1f5-9ee1f0eed796] DONE question=q1 answer_len=1793
+2026-09-05 04:55:05,231 - INFO - app.api.evaluate - [9cd16746-649d-4a67-a1f5-9ee1f0eed796] COMPLETED 5/5 question=q1 sentiment=insufficient
+2026-09-05 04:55:05,233 - INFO - app.api.evaluate - [9cd16746-649d-4a67-a1f5-9ee1f0eed796] ALL_COMPLETED results=5
+2026-09-05 04:55:05,234 - INFO - app.api.evaluate - [9cd16746-649d-4a67-a1f5-9ee1f0eed796] SUMMARY recommendation=NO-BID positive=0 negative=0 neutral=3 insufficient=2
+2026-09-05 04:55:43,728 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=107
+2026-09-05 04:55:45,060 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:55:54,996 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:57:31,451 - INFO - app.api.routes - STREAM_ENDPOINT_CALLED project_id=231b3cee-c51d-4780-90ab-c841b525a673
+2026-09-05 04:57:31,451 - INFO - app.api.routes - STREAM_ENDPOINT_RETURNING project_id=231b3cee-c51d-4780-90ab-c841b525a673
+2026-09-05 04:57:31,451 - INFO - app.api.evaluate - [231b3cee-c51d-4780-90ab-c841b525a673] EVALUATION_START total=5
+2026-09-05 04:57:31,452 - INFO - app.api.evaluate - [231b3cee-c51d-4780-90ab-c841b525a673] START question=q1 category=Economics
+2026-09-05 04:57:31,452 - INFO - app.api.evaluate - [231b3cee-c51d-4780-90ab-c841b525a673] START question=q2 category=Cashflow
+2026-09-05 04:57:31,452 - INFO - app.api.evaluate - [231b3cee-c51d-4780-90ab-c841b525a673] START question=q3 category=Fatal Flaws
+2026-09-05 04:57:31,452 - INFO - app.api.evaluate - [231b3cee-c51d-4780-90ab-c841b525a673] START question=q4 category=Capital
+2026-09-05 04:57:31,464 - INFO - app.api.evaluate - [231b3cee-c51d-4780-90ab-c841b525a673] START question=q5 category=Win
+2026-09-05 04:57:31,464 - INFO - app.api.evaluate - [231b3cee-c51d-4780-90ab-c841b525a673] SUBMITTED futures=5
+2026-09-05 04:57:31,578 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=166
+2026-09-05 04:57:31,579 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=145
+2026-09-05 04:57:31,579 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=165
+2026-09-05 04:57:31,579 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=169
+2026-09-05 04:57:31,579 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=146
+2026-09-05 04:57:33,507 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:57:33,810 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:57:34,591 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:57:36,168 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:57:36,780 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 04:57:39,627 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:57:39,628 - INFO - app.api.evaluate - [231b3cee-c51d-4780-90ab-c841b525a673] DONE question=q1 answer_len=3504
+2026-09-05 04:57:39,628 - INFO - app.api.evaluate - [231b3cee-c51d-4780-90ab-c841b525a673] COMPLETED 1/5 question=q1 sentiment=insufficient
+2026-09-05 04:57:41,600 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:57:41,600 - INFO - app.api.evaluate - [231b3cee-c51d-4780-90ab-c841b525a673] DONE question=q2 answer_len=2313
+2026-09-05 04:57:41,601 - INFO - app.api.evaluate - [231b3cee-c51d-4780-90ab-c841b525a673] COMPLETED 2/5 question=q2 sentiment=insufficient
+2026-09-05 04:57:43,850 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:57:43,850 - INFO - app.api.evaluate - [231b3cee-c51d-4780-90ab-c841b525a673] DONE question=q4 answer_len=5906
+2026-09-05 04:57:43,850 - INFO - app.api.evaluate - [231b3cee-c51d-4780-90ab-c841b525a673] COMPLETED 3/5 question=q4 sentiment=insufficient
+2026-09-05 04:57:46,114 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:57:46,115 - INFO - app.api.evaluate - [231b3cee-c51d-4780-90ab-c841b525a673] DONE question=q5 answer_len=1637
+2026-09-05 04:57:46,115 - INFO - app.api.evaluate - [231b3cee-c51d-4780-90ab-c841b525a673] COMPLETED 4/5 question=q5 sentiment=insufficient
+2026-09-05 04:58:01,565 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 04:58:01,567 - INFO - app.api.evaluate - [231b3cee-c51d-4780-90ab-c841b525a673] DONE question=q3 answer_len=4334
+2026-09-05 04:58:01,569 - INFO - app.api.evaluate - [231b3cee-c51d-4780-90ab-c841b525a673] COMPLETED 5/5 question=q3 sentiment=positive
+2026-09-05 04:58:01,571 - INFO - app.api.evaluate - [231b3cee-c51d-4780-90ab-c841b525a673] ALL_COMPLETED results=5
+2026-09-05 04:58:01,571 - INFO - app.api.evaluate - [231b3cee-c51d-4780-90ab-c841b525a673] SUMMARY recommendation=NO-BID positive=1 negative=0 neutral=0 insufficient=4
+2026-09-05 05:02:38,205 - INFO - app.api.routes - STREAM_ENDPOINT_CALLED project_id=7296ad7d-1568-44f2-8df0-cc40176018a6
+2026-09-05 05:02:38,206 - INFO - app.api.routes - STREAM_ENDPOINT_RETURNING project_id=7296ad7d-1568-44f2-8df0-cc40176018a6
+2026-09-05 05:02:38,206 - INFO - app.api.evaluate - [7296ad7d-1568-44f2-8df0-cc40176018a6] EVALUATION_START total=5
+2026-09-05 05:02:38,206 - INFO - app.api.evaluate - [7296ad7d-1568-44f2-8df0-cc40176018a6] START question=q1 category=Economics
+2026-09-05 05:02:38,206 - INFO - app.api.evaluate - [7296ad7d-1568-44f2-8df0-cc40176018a6] START question=q2 category=Cashflow
+2026-09-05 05:02:38,207 - INFO - app.api.evaluate - [7296ad7d-1568-44f2-8df0-cc40176018a6] START question=q3 category=Fatal Flaws
+2026-09-05 05:02:38,207 - INFO - app.api.evaluate - [7296ad7d-1568-44f2-8df0-cc40176018a6] START question=q4 category=Capital
+2026-09-05 05:02:38,207 - INFO - app.api.evaluate - [7296ad7d-1568-44f2-8df0-cc40176018a6] START question=q5 category=Win
+2026-09-05 05:02:38,207 - INFO - app.api.evaluate - [7296ad7d-1568-44f2-8df0-cc40176018a6] SUBMITTED futures=5
+2026-09-05 05:02:38,309 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=165
+2026-09-05 05:02:38,309 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=166
+2026-09-05 05:02:38,309 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=146
+2026-09-05 05:02:38,310 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=145
+2026-09-05 05:02:38,310 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=169
+2026-09-05 05:02:39,533 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2026-09-05 05:02:39,535 - INFO - app.ai.service - LLM_CALL_DONE status=429
+2026-09-05 05:02:39,535 - ERROR - app.api.evaluate - [7296ad7d-1568-44f2-8df0-cc40176018a6] ERROR question=q2 error=Client error '429 Too Many Requests' for url 'https://openrouter.ai/api/v1/chat/completions'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429
+Traceback (most recent call last):
+  File "/Users/user/PPP-intelligence/ppp-intelligence/app/api/evaluate.py", line 203, in _process_question
+    answer = ask_project(
+  File "/Users/user/PPP-intelligence/ppp-intelligence/app/ai/service.py", line 95, in ask_project
+    response.raise_for_status()
+  File "/Users/user/PPP-intelligence/ppp-intelligence/.venv/lib/python3.10/site-packages/httpx/_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '429 Too Many Requests' for url 'https://openrouter.ai/api/v1/chat/completions'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429
+2026-09-05 05:02:39,540 - INFO - app.api.evaluate - [7296ad7d-1568-44f2-8df0-cc40176018a6] COMPLETED 1/5 question=q2 sentiment=neutral
+2026-09-05 05:02:41,117 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 05:02:41,202 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 05:02:41,936 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 05:02:42,756 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 05:02:46,136 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 05:02:46,137 - INFO - app.api.evaluate - [7296ad7d-1568-44f2-8df0-cc40176018a6] DONE question=q4 answer_len=2469
+2026-09-05 05:02:46,137 - INFO - app.api.evaluate - [7296ad7d-1568-44f2-8df0-cc40176018a6] COMPLETED 2/5 question=q4 sentiment=insufficient
+2026-09-05 05:02:49,718 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 05:02:49,718 - INFO - app.api.evaluate - [7296ad7d-1568-44f2-8df0-cc40176018a6] DONE question=q3 answer_len=5353
+2026-09-05 05:02:49,718 - INFO - app.api.evaluate - [7296ad7d-1568-44f2-8df0-cc40176018a6] COMPLETED 3/5 question=q3 sentiment=negative
+2026-09-05 05:02:52,033 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 05:02:52,034 - INFO - app.api.evaluate - [7296ad7d-1568-44f2-8df0-cc40176018a6] DONE question=q1 answer_len=1752
+2026-09-05 05:02:52,035 - INFO - app.api.evaluate - [7296ad7d-1568-44f2-8df0-cc40176018a6] COMPLETED 4/5 question=q1 sentiment=positive
+2026-09-05 05:02:53,636 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 05:02:53,636 - INFO - app.api.evaluate - [7296ad7d-1568-44f2-8df0-cc40176018a6] DONE question=q5 answer_len=1436
+2026-09-05 05:02:53,636 - INFO - app.api.evaluate - [7296ad7d-1568-44f2-8df0-cc40176018a6] COMPLETED 5/5 question=q5 sentiment=insufficient
+2026-09-05 05:02:53,638 - INFO - app.api.evaluate - [7296ad7d-1568-44f2-8df0-cc40176018a6] ALL_COMPLETED results=5
+2026-09-05 05:02:53,638 - INFO - app.api.evaluate - [7296ad7d-1568-44f2-8df0-cc40176018a6] SUMMARY recommendation=NO-BID positive=1 negative=1 neutral=1 insufficient=2
+2026-09-05 05:03:59,533 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=27
+2026-09-05 05:04:00,808 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 05:04:06,275 - INFO - app.ai.service - LLM_CALL_DONE status=200
+2026-09-05 05:05:37,589 - INFO - app.ai.service - LLM_CALL_START model=openrouter/free question_len=238
+2026-09-05 05:05:39,990 - INFO - httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 05:05:43,427 - INFO - app.ai.service - LLM_CALL_DONE status=200
